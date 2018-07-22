@@ -1,0 +1,2 @@
+# Ignore nb checkpoints
+.ipynb_checkpoints/*
