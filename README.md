@@ -28,3 +28,7 @@ All the notebooks are written in Python3, and presume that you have the [Anacond
 ## Try Them Out
 
 If you want to jump right in to executable notebooks, running on the could, press [here](http://mybinder.org/repo/voytekresearch/tutorials) (powered by [Binder](https://mybinder.org)).
+
+## Acknowledments
+
+Yat team.
