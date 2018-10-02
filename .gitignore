@@ -1,2 +1,4 @@
 # Ignore nb checkpoints
 .ipynb_checkpoints/*
+# Ignore mac directory files
+.DS_Store
