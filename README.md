@@ -1,34 +1,47 @@
-# Tutorials
+# Jupyter Books
 
-![Language](https://img.shields.io/badge/Language-Python-blue.svg)
-[![Binder](http://mybinder.org/badge.svg)](http://mybinder.org/repo/voytekresearch/tutorials)
+<img src="images/logo/logo.png" width=200 />
 
-A set of tutorials for getting started with the VoytekLab.
+This is a guide and template for hosting your own book using
+Jupyter Notebooks and Jekyll.
 
-## Overview
+Here are some highlights:
 
-The tutorials here are aimed at a general overview of analysing electrophysiological data.
+* All course content is written in markdown and Jupyter Notebooks, stored in `notebooks/`
+* This site comes packaged with helper scripts to convert these into Jekyll pages (in `scripts/`)
+* Pages can have [Binder](https://mybinder.org) or JupyterHub links automatically added for interactivity.
+* The website itself is based on Jekyll, and is highly extensible and can be freely-hosted on GitHub.
 
-- Getting Started with Python & Jupyter
-- Electrophysiological Time Series
-- Filtering
-- Spectral Estimation
-- Event-Related Analyses
-- Frequency Interactions
-- Time Series Properties
-- Noise, Filters, Bands
-- Time Domain Analyses
+This repository comes with some sample textbook files from the Data 8 course
+for Data Science at UC Berkeley. You can update these materials and all site
+content with your own, and have a Jupyter-based textbook ready to go shortly!
 
-For more advanced materials, check out [FOOOF](https://github.com/voytekresearch/fooof), our module to parameterize neural power spectra, which has specific tutorials [here](https://github.com/voytekresearch/fooof/tree/master/tutorial) and/or [NeuroDSP](https://github.com/voytekresearch/neurodsp), our module focused on time-domain analyses, which has tutorials [here](https://github.com/voytekresearch/neurodsp/tree/master/tutorials).
+Here are a few links of interest:
 
-## Dependencies
+* **[A demo of the hosted textbook](http://predictablynoisy.com/jupyter-book/ )**
+* **[A short guide to deploying your own textbook](https://predictablynoisy.com/jupyter-book/ch/guide/00_intro)**
+* **[The markdown version of the guide in this repo](notebooks/guide/)**
 
-All the notebooks are written in Python3, and presume that you have the [Anaconda](https://www.anaconda.com/download/) distribution.
+See the [live demo of the template here](https://predictablynoisy.com/jupyter-book).
 
-## Try Them Out
+## Explore this book
 
-If you want to jump right in to executable notebooks, running on the could, press [here](http://mybinder.org/repo/voytekresearch/tutorials) (powered by [Binder](https://mybinder.org)).
+This website is an example of a Jupyter Book. You can explore the chapters of the book
+by clicking on links in the sidebar to the left. Or, you can move linearly forward and
+backwards by clicking the left/right arrow on your computer.
 
-## Acknowledments
+## Contribute or improve the book
 
-Yat team.
+Notice some inefficient CSS? A typo in the text? Want to add a cool feature so that others
+can enjoy the improvements to Jupyter Books? Don't hesitate to [open an issue or a PR on the
+Jupyter Book template repo](https://github.com/choldgraf/jupyter-book). We'd love your
+help!
+
+## Acknowledgements
+
+Jupyter Books was originally created by [Sam Lau][sam] and [Chris Holdgraf][chris]
+with support of the **UC Berkeley Data Science Education Program and the Berkeley
+Institute for Data Science**.
+
+[sam]: http://www.samlau.me/
+[chris]: https://predictablynoisy.com

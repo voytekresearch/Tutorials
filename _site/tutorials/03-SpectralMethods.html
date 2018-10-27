@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,minimum-scale=1">
+
+  <title>03-SpectralMethods</title>
+  <meta name="description" content="Spectral Methods and the PSD">
+
+  <link rel="canonical" href="http://localhost:4000//tutorials/03-SpectralMethods.html">
+  <link rel="alternate" type="application/rss+xml" title="VoytekLab Tutorials" href="http://localhost:4000//feed.xml">
+
+  <meta property="og:url"         content="http://localhost:4000//tutorials/03-SpectralMethods.html" />
+<meta property="og:type"        content="article" />
+<meta property="og:title"       content="03-SpectralMethods" />
+<meta property="og:description" content="Spectral Methods and the PSD" />
+<meta property="og:image"       content="" />
+
+
+  <script type="application/ld+json">
+  {
+  "@context": "http://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage":
+    "http://localhost:4000//tutorials/03-SpectralMethods.html",
+  "headline":
+    "03-SpectralMethods",
+  "datePublished":
+    "2018-10-26T23:55:44-07:00",
+  "dateModified":
+    "2018-10-26T23:55:44-07:00",
+  "description":
+    "Spectral Methods and the PSD",
+  "author": {
+    "@type": "Person",
+    "name": "VoytekLab"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Data 100 at UC Berkeley",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:4000/",
+      "width": 60,
+      "height": 60
+    }
+  },
+  "image": {
+    "@type": "ImageObject",
+    "url": "http://localhost:4000/",
+    "height": 60,
+    "width": 60
+  }
+}
+
+  </script>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css ">
+  <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+
+  <!-- <link rel="manifest" href="/manifest.json"> -->
+  <!-- <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#efae0a"> -->
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+  <meta name="theme-color" content="#233947">
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/x-icon" href="/images/logo/favicon.ico">
+
+  <!-- MathJax Config -->
+  <!-- Allow inline math using $ and automatically break long math lines -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true,
+        processEnvironments: true
+    },
+    CommonHTML: {
+        linebreaks: {
+            automatic: true,
+        },
+    },
+});
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_CHTML' async></script>
+
+  <!-- DOM updating function -->
+  <script>
+const runWhenDOMLoaded = cb => {
+  if (document.readyState != 'loading') {
+    cb()
+  } else if (document.addEventListener) {
+    document.addEventListener('DOMContentLoaded', cb)
+  } else {
+    document.attachEvent('onreadystatechange', function() {
+      if (document.readyState == 'complete') cb()
+    })
+  }
+}
+
+</script>
+
+  <!-- Include Turbolinks to make page loads fast -->
+  <!-- https://github.com/turbolinks/turbolinks -->
+  <script src="/assets/js/turbolinks.js" async></script>
+  <meta name="turbolinks-cache-control" content="no-cache">
+
+  <!-- Load nbinteract for widgets -->
+  <script src="https://unpkg.com/nbinteract-core" async></script>
+
+  <!-- Google analytics -->
+  <script src="/assets/js/ga.js" async></script>
+
+  <!-- Clipboard copy button -->
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" async></script>
+
+  <!-- Load custom website scripts -->
+  <script src="/assets/js/scripts.js" async></script>
+
+  <!-- Update interact links w/ REST param, is defined in includes so we can use templates -->
+  <script>
+/**
+  * To auto-embed hub URLs in interact links if given in a RESTful fashion
+ */
+
+function getJsonFromUrl(url) {
+  var query = url.split('?');
+  if (query.length < 2) {
+    // No queries so just return false
+    return false;
+  }
+  query = query[1];
+  // Collect REST params into a dictionary
+  var result = {};
+  query.split("&").forEach(function(part) {
+    var item = part.split("=");
+    result[item[0]] = decodeURIComponent(item[1]);
+  });
+  return result;
+}
+
+// Parse a Binder URL, converting it to the string needed for JupyterHub
+function binder2Jupyterhub(url) {
+  newUrl = {};
+  console.log(url)
+  parts = url.split('v2/gh/')[1];
+  // Grab the base repo information
+  repoinfo = parts.split('?')[0];
+  var [org, repo, ref] = repoinfo.split('/');
+  newUrl['repo'] = ['https://github.com', org, repo].join('/');
+  newUrl['branch'] = ref
+  // Grab extra parameters passed
+  params = getJsonFromUrl(url);
+  if (params['filepath'] !== undefined) {
+    newUrl['subPath'] = params['filepath']
+  }
+  return jQuery.param(newUrl);
+}
+
+// Filter out potentially unsafe characters to prevent xss
+function safeUrl(url)
+{
+   return String(encodeURIComponent(url))
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+}
+
+function addParamToInternalLinks(hub) {
+  var links = $("a").each(function() {
+    var href = this.href;
+    // If the link is an internal link...
+    if (href.search("http://localhost:4000") !== -1 || href.startsWith('/') || href.search("127.0.0.1:") !== -1) {
+      // Assume we're an internal link, add the hub param to it
+      var params = getJsonFromUrl(href);
+      if (params !== false) {
+        // We have REST params, so append a new one
+        params['hub'] = hub;
+      } else {
+        // Create the REST params
+        params = {'hub': hub};
+      }
+      // Update the link
+      var newHref = href.split('?')[0] + '?' + jQuery.param(params);
+      this.setAttribute('href', decodeURIComponent(newHref));
+    }
+  });
+  return false;
+}
+
+// Update interact links
+function updateInteractLink() {
+    // hack to make this work since it expects a ? in the URL
+    rest = getJsonFromUrl("?" + location.search.substr(1));
+    hubUrl = rest['hub'];
+    if (hubUrl !== undefined) {
+      // Sanitize the hubUrl
+      hubUrl = safeUrl(hubUrl);
+      // Add HTTP text if omitted
+      if (hubUrl.indexOf('http') < 0) {hubUrl = 'http://' + hubUrl;}
+      link = $("a.interact-button")[0];
+      if (link !== undefined) {
+          // Update the interact link URL
+          var href = link.getAttribute('href');
+          var hub_type = 'binder';
+          if (hub_type === 'binder') {
+            // If binder links exist, we need to re-work them for jupyterhub
+            if (hubUrl.indexOf('http%3A%2F%2Flocalhost') > -1) {
+              // If localhost, assume we're working from a local Jupyter server and remove `/hub`
+              first = [hubUrl, 'git-sync'].join('/')
+            } else {
+              first = [hubUrl, 'hub', 'user-redirect', 'git-sync'].join('/')
+            }
+            href = first + '?' + binder2Jupyterhub(href);
+          } else {
+            // If JupyterHub links, we only need to replace the hub url
+            href = href.replace("https://mybinder.org", hubUrl);
+            if (hubUrl.indexOf('http%3A%2F%2Flocalhost') > -1) {
+              // Assume we're working from a local Jupyter server and remove `/hub`
+              href = href.replace("/hub/user-redirect", "");
+            }
+          }
+          link.setAttribute('href', decodeURIComponent(href));
+
+          // Add text after interact link saying where we're launching
+          hubUrlNoHttp = decodeURIComponent(hubUrl).replace('http://', '').replace('https://', '');
+          $("a.interact-button").after($('<div class="interact-context">on ' + hubUrlNoHttp + '</div>'));
+
+      }
+      // Update internal links so we retain the hub url
+      addParamToInternalLinks(hubUrl);
+    }
+}
+
+runWhenDOMLoaded(updateInteractLink)
+document.addEventListener('turbolinks:load', updateInteractLink)
+</script>
+</head>
+
+  <body>
+    <!-- Show sidebar by default -->
+    <div id="js-textbook" class="c-textbook js-show-sidebar">
+      
+
+
+
+<nav id="js-sidebar" class="c-textbook__sidebar">
+  <img src="/images/logo/logo.png" class="textbook_logo" id="sidebar-logo" data-turbolinks-permanent/>
+  <h2 class="c-sidebar__title">VoytekLab Tutorials</h2>
+  <ul class="c-sidebar__chapters">
+    
+      
+      
+
+      
+      
+
+      <li class="c-sidebar__chapter">
+        <a class="c-sidebar__entry "
+          href="/tutorials/00-Introduction"
+        >
+          
+          Tutorials
+        </a>
+
+        
+
+          
+          
+          
+          
+
+          
+
+          <ul class="c-sidebar__sections ">
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/00-Introduction"
+                >
+                  
+                  00-Introduction
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/01-ElectrophysiologicalTimeSeries"
+                >
+                  
+                  01-ElectrophysiologicalTimeSeries
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/02-Filtering"
+                >
+                  
+                  02-Filtering
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry c-sidebar__entry--active"
+                  href="/tutorials/03-SpectralMethods"
+                >
+                  
+                  03-SpectralMethods
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/04-EventRelatedPotentials"
+                >
+                  
+                  04-EventRelatedPotentials
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/05-FrequencyInteractions"
+                >
+                  
+                  05-FrequencyInteractions
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/06-ColoredNoise"
+                >
+                  
+                  06-ColoredNoise
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/07-CommonMisinterpretations"
+                >
+                  
+                  07-CommonMisinterpretations
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/08-FrequencyMisinterpretations"
+                >
+                  
+                  08-FrequencyMisinterpretations
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+          </ul>
+        
+      </li>
+
+      
+    
+  </ul>
+</nav>
+
+
+      <main class="c-textbook__page" tabindex="-1">
+        <div class="o-wrapper c-sidebar-toggle">
+  <!-- We show the sidebar by default so we use .is-active -->
+  <button
+    id="js-sidebar-toggle"
+    class="hamburger hamburger--arrowalt is-active"
+  >
+    <span class="hamburger-box">
+      <span class="hamburger-inner"></span>
+    </span>
+    <span class="c-sidebar-toggle__label">Toggle Sidebar</span>
+  </button>
+</div>
+
+        <div class="o-wrapper">
+          <!-- INTERACT LINKS -->
+
+    
+    
+    <div class="buttons">
+        <a class="interact-button" href="https://mybinder.org/v2/gh/choldgraf/jupyter-book/master?filepath=content%2Ftutorials%2F03-SpectralMethods.ipynb">Interact</a>
+    </div>
+
+
+          <!-- Shamelessly copied from minimal mistakes -->
+
+
+<!-- TOC will only show up if it has at least one item -->
+
+
+  <aside class="sidebar__right">
+    <nav class="onthispage">
+      <header><h4 class="nav__title"><i class="fa fa-list"></i>   On this page</h4></header>
+      <ul class="toc__menu">
+  <li><a href="#default-imports">Default Imports</a></li>
+</ul>
+    </nav>
+  </aside>
+
+
+          <h1 id="spectral-methods-and-the-psd">Spectral Methods and the PSD</h1>
+
+<h5 id="sydney-smith-2018-torben-noto-2015">Sydney Smith 2018, Torben Noto 2015</h5>
+
+<p>Although there are many ways you can process a digital signal, one of the most useful is the power spectral density (PSD). The PSD allows you to vizualize what frequencies are present in a signal. In other words, the PSD lets you look at the signal in the <strong>frequency domain</strong>. Discovering which frequencies are present allows you to investigate the signal beyond the time domain and can be very useful for large-scale data analysis. Let’s go over how to generate one.</p>
+
+<p>The purpose of this tutorial is to:</p>
+<ol>
+  <li>Define the PSD</li>
+  <li>Introduce the Fourier Transform</li>
+  <li>Demonstrate how the Fourier transform is used to analyze a complex signal</li>
+  <li>Generate a PSD from real electrophysiological data</li>
+  <li>Identify features in the PSD that are important for data analysis</li>
+</ol>
+
+<h3 id="default-imports">Default Imports</h3>
+
+<p>First, let’s import some python libraries that contain the functions we need to do this tutorial. I’ve also included some figure formatting to make sure our plots are easy to read.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+
+<span class="kn">import</span> <span class="nn">scipy</span> <span class="k">as</span> <span class="n">sp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">scipy.io</span>
+<span class="kn">import</span> <span class="nn">scipy.signal</span>
+
+<span class="n">figure</span> <span class="o">=</span> <span class="p">{</span><span class="s">'figsize'</span><span class="p">:</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">6</span><span class="p">)}</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s">'figure'</span><span class="p">,</span> <span class="o">**</span><span class="n">figure</span><span class="p">)</span>
+
+<span class="n">font</span> <span class="o">=</span> <span class="p">{</span><span class="s">'family'</span> <span class="p">:</span> <span class="s">'arial'</span><span class="p">,</span>
+        <span class="s">'weight'</span> <span class="p">:</span> <span class="s">'regular'</span><span class="p">,</span>
+        <span class="s">'size'</span>   <span class="p">:</span> <span class="mi">15</span><span class="p">}</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s">'font'</span><span class="p">,</span> <span class="o">**</span><span class="n">font</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="1-analyzing-data-in-the-frequency-domain-the-psd">1. Analyzing data in the frequency domain: The PSD</h2>
+
+<p>Electrophysiological signals are time series composed of many different frequencies. Each of these frequencies contains some amount of voltage power. In the analysis of electrophysiological signals, it can be useful to determine what frequencies are present and how much power they have. These measurements of frequency and power can be correlated to a variety of factors associated with brain function, allowing us to learn even more about the brain.</p>
+
+<p><img src="./img/examplePSD.png" height="400" width="400" /></p>
+
+<p>Pictured above is an example of a PSD calculated from the time series recording from the hippocampus of a rat.</p>
+
+<p>The power spectral density (PSD) is a graphical representation of the frequencies present in a signal that allows us to vizualize how much power is present in each frequency. The plot of <strong>power vs. frequency</strong> is known as a spectrum. PSDs aren’t limited to the analysis of neural signals; they can be used to vizualize any kind of time series data (eg. sounds, financial trends, earthquakes, etc.).</p>
+
+<p>In the next sections, we’ll delve a little deeper into how the PSD is generated and how to read it.</p>
+
+<h2 id="2-the-fourier-transform">2. The Fourier Transform</h2>
+
+<p>The mathmatical technique that allows us to calculate the PSD is called the Fourier Transform. <strong>The Fourier Transform measures the amplitude of every frequency in a signal</strong>. The math that it takes to do this is pretty brilliant and challenging but we don’t have to get too deep into it.</p>
+
+<p>Here’s an analogy: Imagine you play a chord on a piano. If you ran a Fourier transform on the sound signal, you could see how hard you pressed each of the keys. However, in the brain, there are a lot of frequencies present in the same signal and they aren’t as simple as a chord with 3 discrete notes.</p>
+
+<p>For now, let’s try something simpler to investigate what a Fourier Transform can tell us about a signal. Let’s start by running it on a complex sinusoid.</p>
+
+<h2 id="3-the-fft-of-a-complex-sinusoid">3. The FFT of a complex sinusoid</h2>
+
+<p>In this section, I will generate a complex sinusoid that is composed of 2 frequencies: 7 Hz and 130 Hz. Then, I’ll run the Fourier Transform, abbreviated here as “FFT.”</p>
+
+<h4 id="generating-the-a-complex-sinusoid">Generating the a complex sinusoid</h4>
+
+<p>To make the following signal, I added 2 sin waves together. There is a slower wave (7 Hz) with a large amplitude and a fast wave (130 Hz) with a smaller amplitude. Make sure that you pick these out.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">f</span> <span class="o">=</span> <span class="mi">1024</span> <span class="c">#sampling frequency</span>
+<span class="n">dur</span> <span class="o">=</span> <span class="mi">10</span> <span class="c">#10 seconds of signal</span>
+<span class="n">freq</span> <span class="o">=</span> <span class="mi">7</span> <span class="c">#7 Hz signal</span>
+<span class="n">freq2</span> <span class="o">=</span> <span class="mi">130</span> <span class="c">#130 Hz signal</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dur</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">f</span><span class="p">)</span> <span class="c">#times for d</span>
+<span class="n">sig1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">freq</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="c">#10 Hz wavelength</span>
+<span class="n">sig1</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="n">sig1</span><span class="p">;</span> <span class="c">#increase the power of signal 1</span>
+<span class="n">sig2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">freq2</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="c">#130 Hz wavelength</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Complex Signal (7Hz + 130Hz)"</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">],</span><span class="n">sig1</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">]</span><span class="o">+</span><span class="n">sig2</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">512</span><span class="p">])</span> <span class="c">#plot 0.5 seconds of data</span>
+</code></pre></div></div>
+
+<div class="output_data_text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[&lt;matplotlib.lines.Line2D at 0x111f14e10&gt;]
+</code></pre></div></div>
+
+<p><img src="../images/build/tutorials/03-SpectralMethods_10_1.png" alt="png" /></p>
+
+<h4 id="running-and-plotting-the-fft">Running and Plotting the FFT</h4>
+
+<p>Now that we have the complex signal, let’s run the FFT and see if it can pick out the 2 component frequencies. We can vizualize the output in a plot of Power vs. Frequency. Recall from the first section that this is called a spectrum.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># calculating fourier transform of complex signal</span>
+<span class="n">fourier</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">sig1</span><span class="o">+</span><span class="n">sig2</span><span class="p">)</span>
+
+<span class="c"># finding frequency values for the x axis</span>
+<span class="n">fx_step_size</span> <span class="o">=</span> <span class="n">f</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">sig1</span><span class="p">)</span>
+<span class="n">nyq</span> <span class="o">=</span> <span class="n">f</span><span class="o">/</span><span class="mi">2</span>
+<span class="n">total_steps</span> <span class="o">=</span> <span class="n">nyq</span><span class="o">/</span><span class="n">fx_step_size</span>
+<span class="n">fx_bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">nyq</span><span class="p">,</span><span class="n">total_steps</span><span class="p">)</span>
+
+<span class="c"># plotting up to 200 Hz</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fx_bins</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1500</span><span class="p">],</span><span class="nb">abs</span><span class="p">(</span><span class="n">fourier</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1500</span><span class="p">]))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Power'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Frequency (Hz)'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">'FFT of a complex signal'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="output_data_text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0.5,1,'FFT of a complex signal')
+</code></pre></div></div>
+
+<p><img src="../images/build/tutorials/03-SpectralMethods_12_1.png" alt="png" /></p>
+
+<p>So in this plot we’re looking at the power of all of the freqencies present in our signal.</p>
+
+<p>We can clearly see that there is a peak at 7 Hz and a peak at 130 Hz.
+We can also see that the 7 Hz peak has a greater amplitude than the one at 130 Hz.</p>
+
+<p>From this we can conclude that the Fourier Transform accurately identified both frequency components in the signal in addition to telling us how much power (amplitude) is present in each of those components.</p>
+
+<p>However, notice that when we do this, we can’t see any information about the timing in our signal. When looking at a signal in frequency space, we can’t know anything about the <strong>offset of the phases</strong> of these oscillations.</p>
+
+<p>But we still have information about phase. This information is stored as complex numbers that we’re not plotting above. It’s called a Fourier <strong>transform</strong> because <strong>no information is lost when we apply it</strong>. You can calculate the fourier transform or the inverse fourier transform of a signal over and over again and not lose any information, effectively switching between the frequency and time domains.</p>
+
+<h2 id="4-generating-the-psd-of-electrophysiological-data">4. Generating the PSD of electrophysiological data</h2>
+
+<p>Now that we’ve demonstrated how the FFT can help us look at a signal in the frequency domain, let’s apply it to something a little more interesting: electrophysiological data. Specifically, in this section we will use the FFT to generate a PSD of a real ECoG signal.</p>
+
+<h4 id="load-the-electrophysiological-data-ecog">Load the electrophysiological data (ECoG)</h4>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#loading data</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s">'dat/emodat.npy'</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="returning-to-sampling-rate">Returning to sampling rate</h4>
+<p>The sampling rate is important for analyzing in the frequency domain because it determines the range of frequencies that can be detected in the signal. If you need to review sampling rate, see <a href="LINK">our tutorial</a> or, if you want a more in-depth explanation, check out this <a href="https://jackschaedler.github.io/circles-sines-signals/part2.html">interactive guide</a> from Jack Schaedler.</p>
+
+<p>I’ll print the sampling rate for the data we loaded below.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">srate</span> <span class="o">=</span> <span class="mf">1017.2533333333334</span>
+
+<span class="c">#resample at 1024 Hz</span>
+<span class="n">newsrate</span> <span class="o">=</span> <span class="mi">1024</span> <span class="c"># new sampling rate</span>
+<span class="n">ecog_signal</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">newsrate</span><span class="o">/</span><span class="n">srate</span><span class="p">))))</span>
+<span class="n">srate</span> <span class="o">=</span> <span class="n">newsrate</span>
+</code></pre></div></div>
+
+<div class="output_stream highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1017.2533333333334 Hz
+
+</code></pre></div></div>
+
+<p>The sampling rate for this data is about 1017 Hz. This means we can detect frequencies in the signal up to about 508 Hz. I won’t go into detail about why this is, but if you’re curious, use the links above to find more information.</p>
+
+<h4 id="plot-the-data-in-the-time-domain">Plot the data in the time domain</h4>
+
+<p>Plotted below is 1 second of neural data. You might observe some up-and-downs and conclude that it is oscillatory, but it’s not too insightful otherwise.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span><span class="o">/</span><span class="mf">1024.</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="mi">10000</span><span class="p">:</span><span class="mi">11024</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Voltage (uV)'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Time [s]'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">'ECoG Signal in the Time Domain'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="output_data_text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0.5,1,'ECoG Signal in the Time Domain')
+</code></pre></div></div>
+
+<p><img src="../images/build/tutorials/03-SpectralMethods_20_1.png" alt="png" /></p>
+
+<h4 id="calculate-and-plot-the-psd-using-the-fft">Calculate and plot the PSD using the FFT</h4>
+
+<p>Now that we’ve loaded the ECoG signal and we know what it looks like in the time domain, let’s run a FFT and plot the output into a PSD.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># calculating fourier transform of complex signal</span>
+<span class="c"># we're going to take a sample of the data to keep fx bins at a reasonable size.</span>
+<span class="n">fourier</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10000</span><span class="p">])</span> 
+
+<span class="c"># finding frequency values for the x axis</span>
+<span class="n">fx_step_size</span> <span class="o">=</span> <span class="n">srate</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10000</span><span class="p">])</span>
+<span class="n">nyq</span> <span class="o">=</span> <span class="n">srate</span><span class="o">/</span><span class="mi">2</span>
+<span class="n">total_steps</span> <span class="o">=</span> <span class="n">nyq</span><span class="o">/</span><span class="n">fx_step_size</span>
+<span class="n">fx_bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">nyq</span><span class="p">,</span><span class="n">total_steps</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fx_bins</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2000</span><span class="p">],</span><span class="nb">abs</span><span class="p">(</span><span class="n">fourier</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2000</span><span class="p">]))</span> <span class="c">#any frequencies above 200 Hz are probably noise</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Power'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Frequency (Hz)'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">'FFT of ECoG signal'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="output_data_text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0.5,1,'FFT of ECoG signal')
+</code></pre></div></div>
+
+<p><img src="../images/build/tutorials/03-SpectralMethods_22_1.png" alt="png" /></p>
+
+<p>Tada! Our first PSD! It looks significantly different than the one we just made for the complex signal. This one looks pretty messy and is difficult to interpret because power seems to be decaying exponentially with frequency. So let’s try plotting it in log scale.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">((</span><span class="n">fx_bins</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2000</span><span class="p">]),(</span><span class="nb">abs</span><span class="p">(</span><span class="n">fourier</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2000</span><span class="p">])))</span> <span class="c">#any frequencies above 200 Hz are probably noise</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">200</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Power'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Frequency (Hz)'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">'FFT of ECoG signal (log scale)'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="output_data_text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0.5,1,'FFT of ECoG signal (log scale)')
+</code></pre></div></div>
+
+<p><img src="../images/build/tutorials/03-SpectralMethods_24_1.png" alt="png" /></p>
+
+<p>That looks a little better. We can see that there are many wavelengths that contribute to this signal, a stark comparison to the two-component sinusoid we analyzed earlier. Additionally, notice that it looks like longer wavelengths (slower frequencies) seem to have a larger power than shorter wavelengths (higher frequencies).</p>
+
+<h5 id="slope-of-the-psd-and-1f-power-law">Slope of the PSD and 1/f power law</h5>
+<p>While messy, the data in this plot show an interesting relationship. The data form a rough line that proceeds downward diagonally from the upper left corner to the lower right corner of the plot. Actually, the equation for this line is P = 1/f. This is a very special mathmatical ratio called a power law distribution or pink noise. 1/f relationships show up everywhere in nature in spooky ways. Magnitudes of earthquakes, fluctuations in the stock market, sizes of craters on the moon, and even the power spectrum of popular music all have power law distributions. Here we can see the same relationship in neural signals. We’ll look at the 1/f relationship in more detail in a later tutorial but for now, back to the PSD!</p>
+
+<h4 id="welchs-psd">Welch’s PSD</h4>
+<p>There’s a way to smooth out our FFT without losing too much information. The most common way of doing this is by using <strong>Welch’s method</strong>.
+Basically, we calculate the FFT of a signal across a few sliding windows. Then we calculate the mean PSD from all the sliding windows. Notice that this PSD is also plotted on a log scale.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#Calculate the Welch's PSD of the data</span>
+<span class="n">f</span><span class="p">,</span><span class="n">pspec</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">welch</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fs</span><span class="o">=</span><span class="n">srate</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="s">'hanning'</span><span class="p">,</span> <span class="n">nperseg</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">srate</span><span class="p">,</span> <span class="n">noverlap</span><span class="o">=</span><span class="n">srate</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+                          <span class="n">nfft</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">detrend</span><span class="o">=</span><span class="s">'linear'</span><span class="p">,</span> <span class="n">return_onesided</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">scaling</span><span class="o">=</span><span class="s">'density'</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">200</span><span class="o">*</span><span class="mi">2</span><span class="p">],</span><span class="n">pspec</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">200</span><span class="o">*</span><span class="mi">2</span><span class="p">])</span><span class="c">#Any frequencies with &gt;200 Hz are going to be noise in ECoG data.</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Power'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Frequency (Hz)'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">150</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">"Welch's PSD of ECoG signal"</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="output_data_text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0.5,1,"Welch's PSD of ECoG signal")
+</code></pre></div></div>
+
+<p><img src="../images/build/tutorials/03-SpectralMethods_26_1.png" alt="png" /></p>
+
+<p>Now the signal is much cleaner and easier to interpret. We can start to notice some interesting features of the PSD including a much clearer 1/f slope and some interesting “bumps”, or peaks, in the spectrum around 8, 14, and 25 Hz. We’ll talk about why these peaks are significant in the next section.</p>
+
+<h2 id="5-analyzing-the-psd-important-features-and-insights">5. Analyzing the PSD: Important features and insights</h2>
+
+<p>The PSD is an extremely useful tool when it comes to analyzing neural data. Different features of the PSD can be correlated with certain brain regions, tasks and behaviors, age, and even mental illnesses. Two of these features are oscillations and aperiodic slope.</p>
+
+<h4 id="oscillations">Oscillations</h4>
+
+<p>Neural oscillations are prominent, consistent fluctuations in electrophysiological signals that are present throughout the brain. Although there is still much more to understand about them, they have been associated with the brain’s vital functions, including interregional communication, perceptual performance, and the production of motor movements.</p>
+
+<p>Identifying oscillations is vital to studying them and their purpose in the brain. Luckily, oscillations can be picked out by analyzing the PSD. Remember the peaks we talked about in the previous section? Although not universally accepted, the majority of the electrophysiological community has agreed that a <em>peak in the PSD at a certain frequency indicates the presence of an oscillation at that frequency</em> (<a href="https://doi.org/10.1016/j.neuron.2010.04.020">He, et al. 2010</a>).</p>
+
+<p>For example, the Welch’s PSD from the previous section most likely has oscillations at 8, 14, and 25 Hz. Oscillations in these frequencies are associated with bands of activity, known as theta, alpha, and beta. These frequency bands have been studied since the 1950’s but we’re still discovering lots of new things about them.</p>
+
+<h4 id="aperiodic-slope">Aperiodic Slope</h4>
+
+<p>The relationship between power and frequency is another important property of PSDs. In the literature this property is referred to as aperiodic slope. The PSD tends to have a slope of roughly 1/f, following a <strong>power law distribution</strong>. However, when you look at lots of PSDs, you start to see variations in the slope of the spectrum. These variations in slope can be correlated with factors like age or mental illness, even task performance. Although the slope of electrophysiological PSDs was recognized decades ago, what slope is and what is producing it is still being investigated.</p>
+
+<p>If you’d like to know more about what the Voytek lab thinks slope could be, check out <a href="https://doi.org/10.1016/j.neuroimage.2017.06.078">Gao, et al. 2017</a>.</p>
+
+
+          <nav class="c-page__nav">
+  
+    <a id="js-page__nav__prev" class="c-page__nav__prev" href="/tutorials/02-Filtering">
+      〈 <span class="u-margin-right-tiny"></span> 02-Filtering
+    </a>
+  
+
+  
+    <a id="js-page__nav__next" class="c-page__nav__next" href="/tutorials/04-EventRelatedPotentials">
+      04-EventRelatedPotentials <span class="u-margin-right-tiny"></span> 〉
+    </a>
+  
+</nav>
+
+        </div>
+      </main>
+    </div>
+
+  </body>
+</html>

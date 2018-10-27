@@ -1,0 +1,45 @@
+# This file contains the order and numbering for all sections in the book.
+# _includes/sidebar.html renders this as a sidebar.
+#
+# Each entry has the following schema:
+#
+# title: Title of chapter or section
+# url: URL of section. Use absolute URLs to link between pages
+# class: (optional) a CSS class to add to this link
+# sections: Contains chapter's sections
+# not_numbered: true if the section shouldn't have a number in the sidebar
+#   (e.g. Introduction or appendices)
+# divider: true if this entry should just be rendered as a horizontal divider
+#   in the sidebar. All other values are ignored.
+
+- title: Tutorials
+  url: /tutorials/00-Introduction
+  not_numbered: true
+  sections:
+  - title: 00-Introduction
+    url: /tutorials/00-Introduction
+    not_numbered: true
+  - title: 01-ElectrophysiologicalTimeSeries
+    url: /tutorials/01-ElectrophysiologicalTimeSeries
+    not_numbered: true
+  - title: 02-Filtering
+    url: /tutorials/02-Filtering
+    not_numbered: true
+  - title: 03-SpectralMethods
+    url: /tutorials/03-SpectralMethods
+    not_numbered: true
+  - title: 04-EventRelatedPotentials
+    url: /tutorials/04-EventRelatedPotentials
+    not_numbered: true
+  - title: 05-FrequencyInteractions
+    url: /tutorials/05-FrequencyInteractions
+    not_numbered: true
+  - title: 06-ColoredNoise
+    url: /tutorials/06-ColoredNoise
+    not_numbered: true
+  - title: 07-CommonMisinterpretations
+    url: /tutorials/07-CommonMisinterpretations
+    not_numbered: true
+  - title: 08-FrequencyMisinterpretations
+    url: /tutorials/08-FrequencyMisinterpretations
+    not_numbered: true

@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,minimum-scale=1">
+
+  <title>05-FrequencyInteractions</title>
+  <meta name="description" content="Frequency Interactions and Phase-Amplitude Coupling (PAC)">
+
+  <link rel="canonical" href="http://localhost:4000//tutorials/05-FrequencyInteractions.html">
+  <link rel="alternate" type="application/rss+xml" title="VoytekLab Tutorials" href="http://localhost:4000//feed.xml">
+
+  <meta property="og:url"         content="http://localhost:4000//tutorials/05-FrequencyInteractions.html" />
+<meta property="og:type"        content="article" />
+<meta property="og:title"       content="05-FrequencyInteractions" />
+<meta property="og:description" content="Frequency Interactions and Phase-Amplitude Coupling (PAC)" />
+<meta property="og:image"       content="" />
+
+
+  <script type="application/ld+json">
+  {
+  "@context": "http://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage":
+    "http://localhost:4000//tutorials/05-FrequencyInteractions.html",
+  "headline":
+    "05-FrequencyInteractions",
+  "datePublished":
+    "2018-10-26T23:55:44-07:00",
+  "dateModified":
+    "2018-10-26T23:55:44-07:00",
+  "description":
+    "Frequency Interactions and Phase-Amplitude Coupling (PAC)",
+  "author": {
+    "@type": "Person",
+    "name": "VoytekLab"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Data 100 at UC Berkeley",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:4000/",
+      "width": 60,
+      "height": 60
+    }
+  },
+  "image": {
+    "@type": "ImageObject",
+    "url": "http://localhost:4000/",
+    "height": 60,
+    "width": 60
+  }
+}
+
+  </script>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css ">
+  <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+
+  <!-- <link rel="manifest" href="/manifest.json"> -->
+  <!-- <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#efae0a"> -->
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+  <meta name="theme-color" content="#233947">
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/x-icon" href="/images/logo/favicon.ico">
+
+  <!-- MathJax Config -->
+  <!-- Allow inline math using $ and automatically break long math lines -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true,
+        processEnvironments: true
+    },
+    CommonHTML: {
+        linebreaks: {
+            automatic: true,
+        },
+    },
+});
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_CHTML' async></script>
+
+  <!-- DOM updating function -->
+  <script>
+const runWhenDOMLoaded = cb => {
+  if (document.readyState != 'loading') {
+    cb()
+  } else if (document.addEventListener) {
+    document.addEventListener('DOMContentLoaded', cb)
+  } else {
+    document.attachEvent('onreadystatechange', function() {
+      if (document.readyState == 'complete') cb()
+    })
+  }
+}
+
+</script>
+
+  <!-- Include Turbolinks to make page loads fast -->
+  <!-- https://github.com/turbolinks/turbolinks -->
+  <script src="/assets/js/turbolinks.js" async></script>
+  <meta name="turbolinks-cache-control" content="no-cache">
+
+  <!-- Load nbinteract for widgets -->
+  <script src="https://unpkg.com/nbinteract-core" async></script>
+
+  <!-- Google analytics -->
+  <script src="/assets/js/ga.js" async></script>
+
+  <!-- Clipboard copy button -->
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" async></script>
+
+  <!-- Load custom website scripts -->
+  <script src="/assets/js/scripts.js" async></script>
+
+  <!-- Update interact links w/ REST param, is defined in includes so we can use templates -->
+  <script>
+/**
+  * To auto-embed hub URLs in interact links if given in a RESTful fashion
+ */
+
+function getJsonFromUrl(url) {
+  var query = url.split('?');
+  if (query.length < 2) {
+    // No queries so just return false
+    return false;
+  }
+  query = query[1];
+  // Collect REST params into a dictionary
+  var result = {};
+  query.split("&").forEach(function(part) {
+    var item = part.split("=");
+    result[item[0]] = decodeURIComponent(item[1]);
+  });
+  return result;
+}
+
+// Parse a Binder URL, converting it to the string needed for JupyterHub
+function binder2Jupyterhub(url) {
+  newUrl = {};
+  console.log(url)
+  parts = url.split('v2/gh/')[1];
+  // Grab the base repo information
+  repoinfo = parts.split('?')[0];
+  var [org, repo, ref] = repoinfo.split('/');
+  newUrl['repo'] = ['https://github.com', org, repo].join('/');
+  newUrl['branch'] = ref
+  // Grab extra parameters passed
+  params = getJsonFromUrl(url);
+  if (params['filepath'] !== undefined) {
+    newUrl['subPath'] = params['filepath']
+  }
+  return jQuery.param(newUrl);
+}
+
+// Filter out potentially unsafe characters to prevent xss
+function safeUrl(url)
+{
+   return String(encodeURIComponent(url))
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+}
+
+function addParamToInternalLinks(hub) {
+  var links = $("a").each(function() {
+    var href = this.href;
+    // If the link is an internal link...
+    if (href.search("http://localhost:4000") !== -1 || href.startsWith('/') || href.search("127.0.0.1:") !== -1) {
+      // Assume we're an internal link, add the hub param to it
+      var params = getJsonFromUrl(href);
+      if (params !== false) {
+        // We have REST params, so append a new one
+        params['hub'] = hub;
+      } else {
+        // Create the REST params
+        params = {'hub': hub};
+      }
+      // Update the link
+      var newHref = href.split('?')[0] + '?' + jQuery.param(params);
+      this.setAttribute('href', decodeURIComponent(newHref));
+    }
+  });
+  return false;
+}
+
+// Update interact links
+function updateInteractLink() {
+    // hack to make this work since it expects a ? in the URL
+    rest = getJsonFromUrl("?" + location.search.substr(1));
+    hubUrl = rest['hub'];
+    if (hubUrl !== undefined) {
+      // Sanitize the hubUrl
+      hubUrl = safeUrl(hubUrl);
+      // Add HTTP text if omitted
+      if (hubUrl.indexOf('http') < 0) {hubUrl = 'http://' + hubUrl;}
+      link = $("a.interact-button")[0];
+      if (link !== undefined) {
+          // Update the interact link URL
+          var href = link.getAttribute('href');
+          var hub_type = 'binder';
+          if (hub_type === 'binder') {
+            // If binder links exist, we need to re-work them for jupyterhub
+            if (hubUrl.indexOf('http%3A%2F%2Flocalhost') > -1) {
+              // If localhost, assume we're working from a local Jupyter server and remove `/hub`
+              first = [hubUrl, 'git-sync'].join('/')
+            } else {
+              first = [hubUrl, 'hub', 'user-redirect', 'git-sync'].join('/')
+            }
+            href = first + '?' + binder2Jupyterhub(href);
+          } else {
+            // If JupyterHub links, we only need to replace the hub url
+            href = href.replace("https://mybinder.org", hubUrl);
+            if (hubUrl.indexOf('http%3A%2F%2Flocalhost') > -1) {
+              // Assume we're working from a local Jupyter server and remove `/hub`
+              href = href.replace("/hub/user-redirect", "");
+            }
+          }
+          link.setAttribute('href', decodeURIComponent(href));
+
+          // Add text after interact link saying where we're launching
+          hubUrlNoHttp = decodeURIComponent(hubUrl).replace('http://', '').replace('https://', '');
+          $("a.interact-button").after($('<div class="interact-context">on ' + hubUrlNoHttp + '</div>'));
+
+      }
+      // Update internal links so we retain the hub url
+      addParamToInternalLinks(hubUrl);
+    }
+}
+
+runWhenDOMLoaded(updateInteractLink)
+document.addEventListener('turbolinks:load', updateInteractLink)
+</script>
+</head>
+
+  <body>
+    <!-- Show sidebar by default -->
+    <div id="js-textbook" class="c-textbook js-show-sidebar">
+      
+
+
+
+<nav id="js-sidebar" class="c-textbook__sidebar">
+  <img src="/images/logo/logo.png" class="textbook_logo" id="sidebar-logo" data-turbolinks-permanent/>
+  <h2 class="c-sidebar__title">VoytekLab Tutorials</h2>
+  <ul class="c-sidebar__chapters">
+    
+      
+      
+
+      
+      
+
+      <li class="c-sidebar__chapter">
+        <a class="c-sidebar__entry "
+          href="/tutorials/00-Introduction"
+        >
+          
+          Tutorials
+        </a>
+
+        
+
+          
+          
+          
+          
+
+          
+
+          <ul class="c-sidebar__sections ">
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/00-Introduction"
+                >
+                  
+                  00-Introduction
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/01-ElectrophysiologicalTimeSeries"
+                >
+                  
+                  01-ElectrophysiologicalTimeSeries
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/02-Filtering"
+                >
+                  
+                  02-Filtering
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/03-SpectralMethods"
+                >
+                  
+                  03-SpectralMethods
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/04-EventRelatedPotentials"
+                >
+                  
+                  04-EventRelatedPotentials
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry c-sidebar__entry--active"
+                  href="/tutorials/05-FrequencyInteractions"
+                >
+                  
+                  05-FrequencyInteractions
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/06-ColoredNoise"
+                >
+                  
+                  06-ColoredNoise
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/07-CommonMisinterpretations"
+                >
+                  
+                  07-CommonMisinterpretations
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/08-FrequencyMisinterpretations"
+                >
+                  
+                  08-FrequencyMisinterpretations
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+          </ul>
+        
+      </li>
+
+      
+    
+  </ul>
+</nav>
+
+
+      <main class="c-textbook__page" tabindex="-1">
+        <div class="o-wrapper c-sidebar-toggle">
+  <!-- We show the sidebar by default so we use .is-active -->
+  <button
+    id="js-sidebar-toggle"
+    class="hamburger hamburger--arrowalt is-active"
+  >
+    <span class="hamburger-box">
+      <span class="hamburger-inner"></span>
+    </span>
+    <span class="c-sidebar-toggle__label">Toggle Sidebar</span>
+  </button>
+</div>
+
+        <div class="o-wrapper">
+          <!-- INTERACT LINKS -->
+
+    
+    
+    <div class="buttons">
+        <a class="interact-button" href="https://mybinder.org/v2/gh/choldgraf/jupyter-book/master?filepath=content%2Ftutorials%2F05-FrequencyInteractions.ipynb">Interact</a>
+    </div>
+
+
+          <!-- Shamelessly copied from minimal mistakes -->
+
+
+<!-- TOC will only show up if it has at least one item -->
+
+
+  <aside class="sidebar__right">
+    <nav class="onthispage">
+      <header><h4 class="nav__title"><i class="fa fa-list"></i>   On this page</h4></header>
+      <ul class="toc__menu">
+  <li><a href="#default-imports">Default Imports</a></li>
+</ul>
+    </nav>
+  </aside>
+
+
+          <h1 id="frequency-interactions-and-phase-amplitude-coupling-pac">Frequency Interactions and Phase-Amplitude Coupling (PAC)</h1>
+
+<h5 id="sydney-smith-2018-torben-noto-2015">Sydney Smith 2018, Torben Noto 2015</h5>
+
+<h4 id="neural-oscillations-can-be-embedded-within-each-other">Neural Oscillations can be embedded within each other.</h4>
+<p>There are many ongoing oscillations in the brain and <strong>features of oscillations in different frequency bands can interact with each other</strong>. Phase-amplitude coupling (PAC) measures how much the amplitude of a fast oscilation is related to the phase of a slower oscillation. This has been proposed as a mechanism that different brain regions may use to communicate.</p>
+
+<p>In this notebook, we will:</p>
+<ol>
+  <li>Introduce the concept of PAC using complex sinusoid</li>
+  <li>Vizualize the relationship between phase and amplitude in the time domain</li>
+  <li>Discuss what PAC looks like in neural data</li>
+  <li>Explore PAC between theta (4-8 Hz) and HFA (80-150 Hz) in real ECoG data</li>
+</ol>
+
+<p>I recommend that you read the <a href="Filtering Link">filtering</a> and/or <a href="PSD Link">PSD tutorials</a> before reading this if you are not familiar at all with filters and frequency analyses.</p>
+
+<h3 id="default-imports">Default Imports</h3>
+
+<p>Before we get started, let’s import the python libraries with the functions we need to perform these analyses.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">scipy</span> <span class="k">as</span> <span class="n">sp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">scipy.io</span>
+<span class="kn">import</span> <span class="nn">scipy.signal</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">butter</span><span class="p">,</span> <span class="n">filtfilt</span><span class="p">,</span> <span class="n">hilbert</span>
+</code></pre></div></div>
+
+<h2 id="1-phase-amplitude-coupling-simulated">1. Phase-amplitude coupling (simulated)</h2>
+
+<p>If you’re not familiar with signal processing, the concept of cross-frequency coupling, or phase-amplitude coupling (PAC) as it’s known in neural data analysis, can be difficult to conceptualize. Before we look at PAC in real neural data, we’ll simulate a signal in which PAC is occuring and then break it down into it’s frequency components to investigate the phase-amplitude relationship.</p>
+
+<h5 id="pac-occurs-when-the-frequency-of-a-low-frequency-oscillation-modulates-the-amplitude-of-a-high-frequency-oscillation">PAC occurs when the frequency of a low frequency oscillation modulates the amplitude of a high frequency oscillation.</h5>
+
+<p>In the following cells, I’ll generate a sinusoidal signal that has two frequency components, one slow (4 Hz) and one fast (100 Hz), where the amplitude of the fast component is changed by the phase of the slow component.</p>
+
+<p>First, we’ll make some variables for the two different frequencies, sampling rate, signal duration, and an array for the times associated with the amplitude values of the signal.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">freq1</span> <span class="o">=</span> <span class="mi">4</span> <span class="c">#Slow, modulating signal, 4 Hz</span>
+<span class="n">freq2</span> <span class="o">=</span> <span class="mi">100</span> <span class="c">#Fast, modulated signal, 100 Hz</span>
+<span class="n">srate</span> <span class="o">=</span> <span class="mi">1024</span> <span class="c">#sampling rate</span>
+<span class="n">dur</span> <span class="o">=</span> <span class="mi">10</span> <span class="c">#10 seconds of signal</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dur</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="n">srate</span><span class="p">)</span> <span class="c">#times array</span>
+</code></pre></div></div>
+
+<p>Now that we have our variables defined, let’s generate and plot the amplitude-modulated signal.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#Generate amplitude-modulated signal by combining 2 sinusoids</span>
+<span class="n">sim_signal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">freq1</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">freq2</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="mi">6</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">freq1</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">freq2</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+
+<span class="c">#Plot 1 second of signal</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Simulated PAC Signal (4Hz &amp; 100Hz)'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Time (seconds)'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Amplitude'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">],</span><span class="n">sim_signal</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">])</span>
+</code></pre></div></div>
+
+<div class="output_data_text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[&lt;matplotlib.lines.Line2D at 0x1089a70f0&gt;]
+</code></pre></div></div>
+
+<p><img src="../images/build/tutorials/05-FrequencyInteractions_7_1.png" alt="png" /></p>
+
+<p>At first glance, there seem to be two things going on in this signal:</p>
+
+<ol>
+  <li>A larger wave that completes four cycles over the course of a second</li>
+  <li>A smalller, higher frequency wave that changes amplitude through time</li>
+</ol>
+
+<p>We can identify <strong>(1)</strong> as the 4 Hz component. <strong>(2)</strong> has a much higher frequency (100 Hz) and its amplitude seems to fluctuate over time. Specifically, its amplitude is greatest at the peaks of the 4 Hz wave and almost non-existent at the troughs of the 4 Hz wave. From this information we can hypothesize that the phase of the 4 Hz wave and the amplitude 100 Hz wave are related.</p>
+
+<p>Now that we have our hypothesis, we’ll  take a closer look at the relationship between thes two frequency components in the signal.</p>
+
+<h2 id="2-vizualizing-phase-and-amplitude-in-the-time-domain-using-filters">2. Vizualizing phase and amplitude in the time domain using filters</h2>
+
+<p>Using filters, let’s track the phase of the 4 Hz signal and the amplitude of the 100 Hz signal through time. If you need a refresher on filters, check out our <a href="LINK">tutorial</a>.</p>
+
+<p>First, let’s define our filtering functions.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#filtering functions</span>
+<span class="k">def</span> <span class="nf">butter_bandpass</span><span class="p">(</span><span class="n">lowcut</span><span class="p">,</span> <span class="n">highcut</span><span class="p">,</span> <span class="n">srate</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+    <span class="s">"""""
+    lowcut: lower bound of the frequency that we want to isolate
+    highcut: upper bound of the frequency that we want to isolate
+    srate: sampling rate of our data
+    """""</span>
+    <span class="n">nyq</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">srate</span> <span class="c">#nyquist frequency </span>
+    <span class="n">low</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lowcut</span><span class="p">)</span> <span class="o">/</span> <span class="n">nyq</span>
+    <span class="n">high</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">highcut</span><span class="p">)</span> <span class="o">/</span> <span class="n">nyq</span>
+    <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">butter</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="p">[</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">],</span> <span class="n">btype</span><span class="o">=</span><span class="s">'band'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span>
+
+<span class="k">def</span> <span class="nf">butter_bandpass_filter</span><span class="p">(</span><span class="n">mydata</span><span class="p">,</span> <span class="n">lowcut</span><span class="p">,</span> <span class="n">highcut</span><span class="p">,</span> <span class="n">srate</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">butter_bandpass</span><span class="p">(</span><span class="n">lowcut</span><span class="p">,</span> <span class="n">highcut</span><span class="p">,</span> <span class="n">srate</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">filtfilt</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">mydata</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">y</span>
+</code></pre></div></div>
+
+<h4 id="filter-the-generated-signal">Filter the generated signal</h4>
+<p>Now that we have our filters prepped and ready, let’s apply them to the signal we generated.</p>
+
+<p>Let’s start by filtering out the two frequency components in the signal. We’ll do this by filtering the simulated signal through two butterworth bandpass filters, one filtering in a range of 2-6 Hz  to isolate our low frequency (4 Hz) component and the other filtering in a range of 80-110 Hz to isolate our high frequency component (100 Hz).</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#parameters</span>
+<span class="n">phase_band</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span> <span class="c">#4 Hz modulating frequency filter band</span>
+<span class="n">amplitude_band</span> <span class="o">=</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span><span class="mi">110</span><span class="p">]</span> <span class="c">#100 Hz modulated frequency filter band</span>
+
+<span class="c">#isolate the slow component</span>
+<span class="n">phase_data_filt</span> <span class="o">=</span> <span class="n">butter_bandpass_filter</span><span class="p">(</span><span class="n">sim_signal</span><span class="p">,</span> <span class="n">phase_band</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">phase_band</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="nb">round</span><span class="p">(</span><span class="n">srate</span><span class="p">))</span>
+
+<span class="c">#isolate the fast component</span>
+<span class="n">amp_data_filt</span> <span class="o">=</span> <span class="n">butter_bandpass_filter</span><span class="p">(</span><span class="n">sim_signal</span><span class="p">,</span> <span class="n">amplitude_band</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">amplitude_band</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="nb">round</span><span class="p">(</span><span class="n">srate</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h4 id="plot-the-filtered-signal">Plot the filtered signal</h4>
+
+<p>Here, we’ll plot the outputs of the filters we just applied to the simulated signal. It will show us two signals overlayed so we can look at their relationship through time.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Isolated Slow and Fast Components of Simulated Signal'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Time (seconds)'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Amplitude'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">],</span> <span class="n">phase_data_filt</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s">'Slow (4 Hz) Component'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">],</span> <span class="n">amp_data_filt</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s">'Fast (100 Hz) Component'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="output_data_text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;matplotlib.legend.Legend at 0x108c92dd8&gt;
+</code></pre></div></div>
+
+<p><img src="../images/build/tutorials/05-FrequencyInteractions_14_1.png" alt="png" /></p>
+
+<p>When we overlay the filtered fast and slow components, we can see interesting “pulses” of high amplitude in the fast component that coincide with the peaks of the slow component.</p>
+
+<p>Because it looks like the amplitude of the fast component wave is only occuring during a certain phase of the slow component wave, the next step is to plot the phase of the slow component and the amplitude envelope of the fast component through time. We’ll do this using a Hilbert function.</p>
+
+<h4 id="calculating-phase-and-amplitude-envelope">Calculating phase and amplitude envelope</h4>
+
+<p>The first function calculates the phase of the slow (4 Hz) component and the second calculates the amplitude envelope of the fast component (100 Hz).</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#calculating phase angle of slow component</span>
+<span class="n">phase_data</span> <span class="o">=</span> <span class="n">hilbert</span><span class="p">(</span><span class="n">phase_data_filt</span><span class="p">)</span>
+<span class="n">phase_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">phase_data</span><span class="p">)</span>
+
+<span class="c">#calculating amplitude envelope of fast component</span>
+<span class="n">amp_data</span> <span class="o">=</span> <span class="n">hilbert</span><span class="p">(</span><span class="n">amp_data_filt</span><span class="p">)</span>
+<span class="n">amp_data</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">amp_data</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="plotting-the-outputs-of-the-hilbert-function">Plotting the outputs of the Hilbert function</h4>
+<p>When you look at the plot below, notice that the phase of the slow component is plotted between positive and negative π (3.14). Amplitude is plotted between 0 and 1.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">1024</span><span class="p">:</span><span class="mi">2048</span><span class="p">],</span> <span class="n">phase_data</span><span class="p">[</span><span class="mi">1024</span><span class="p">:</span><span class="mi">2048</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span> <span class="s">'Phase of Slow Component'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">1024</span><span class="p">:</span><span class="mi">2048</span><span class="p">],</span> <span class="n">amp_data</span><span class="p">[</span><span class="mi">1024</span><span class="p">:</span><span class="mi">2048</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span> <span class="s">'Amplitude Envelope of Fast Component'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Phase and Amplitude of Generated Signal'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Time (Seconds)'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="output_data_text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;matplotlib.legend.Legend at 0x108e7eba8&gt;
+</code></pre></div></div>
+
+<p><img src="../images/build/tutorials/05-FrequencyInteractions_18_1.png" alt="png" /></p>
+
+<p>As we can see from the results of our filters, the phase of the slow (4 Hz) component cycles between -π to π four times in a second. We see a similar result for the amplitude envelope of the fast (100 Hz) component; it oscillates between 0 and 1 four times per second as well. The amplitude of the fast component is highest when the phase of the slow component equals zero (the peak of the slow wave) and lowest when the phase equals ±π (the trough of the slow wave). This vizualization makes it very clear that the amplitude of the 100 Hz component is directly related to the phase of the 4 Hz component.</p>
+
+<p>In other words, <strong>the amplitude of the 100 Hz signal is coupled to the phase of the 4 Hz signal</strong>.</p>
+
+<h4 id="to-summarize">To summarize</h4>
+
+<p>In the last two sections we generated a signal in which the amplitude of a fast component was related to the phase of a slow component. We explored this relationship with two analyses:</p>
+
+<ol>
+  <li>Butterworth bandpass filtering to isolate the slow and fast frequency components</li>
+  <li>Applying a Hilbert function to plot the phase of the slow wave with the amplitude envelope of the fast wave</li>
+</ol>
+
+<p>Using these two visual methods, we determined that in the simulated signal, the <strong>amplitude</strong> of the fast wave was <em>coupled</em> to the <strong>phase</strong> of the slow wave…</p>
+
+<p><strong><em>Phase-Amplitude Coupling!</em></strong></p>
+
+<h2 id="3-pac-in-neural-data">3. PAC in neural data</h2>
+
+<p>In real electrophysiological data recorded from living brains, PAC is not as obvious as it was in our simulated signal. Although we can see some semblance of frequency interactions when we look at neural time series, most of the time the interaction is obscured by the presence of noise, low-frequency drift, artifacts, and other common characteristics of this kind of data. Not to mention that neural signals aren’t always sinusoidal, but that’s a story for another day (or another <a href="LINKTO#8">tutorial</a>).</p>
+
+<p>For the sake of comparison, let’s plot some real neural data and compare it to our simulated signal from earlier.</p>
+
+<h4 id="load-ecog-data">Load ECoG data</h4>
+
+<p>First, let’s load some electrocorticography (ECoG) data and resample it at the same rate of our simulated signal (not necessary, just easier to work with).</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#loading ECoG data from local save</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s">'dat/emodat.npy'</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="mf">1017.2533333333334</span>
+
+<span class="c">#resample at 1024 Hz</span>
+<span class="n">newsrate</span> <span class="o">=</span> <span class="mi">1024</span> <span class="c"># new sampling rate</span>
+<span class="n">ecog_signal</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">newsrate</span><span class="o">/</span><span class="n">fs</span><span class="p">))))</span>
+</code></pre></div></div>
+
+<h4 id="plot-ecog-data-and-simulated-data">Plot ECoG data and simulated data</h4>
+
+<p>Plotting the ECoG data and the simulated data from the previous sections will let us compare them purely on a visual basis, highlighting the differences between what PAC looks like in simulations vs. real data.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+
+<span class="c">#Plot ECoG Signal</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">],</span> <span class="n">ecog_signal</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Raw ECoG Signal'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Voltage'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+<span class="c">#Plot Simulated Signal</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">],</span> <span class="n">sim_signal</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Simulated PAC Signal'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Amplitude'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Time (Seconds)'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="output_data_text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Text(0.5,0,'Time (Seconds)')
+</code></pre></div></div>
+
+<p><img src="../images/build/tutorials/05-FrequencyInteractions_24_1.png" alt="png" /></p>
+
+<p>Even at first glance, these signals are obviousy VERY different. The ECoG signal looks irregular, jagged, and much more natural than the smooth, sinusoidal simulated signal.</p>
+
+<p>However, upon closer inspection, we can see some interesting similarities. For example, there does seem to be a slower oscillation within the ECoG signal. At some phases of this slow wave, there are some periods of high-frequency activity.</p>
+
+<p>So even though the signals look very different at first, it’s possible that PAC could also exist in the ECoG signal. To investigate this further, let’s run some of the same analyses from section 2 on the ECoG signal.</p>
+
+<h2 id="4-visualizing-pac-in-ecog-data">4. Visualizing PAC in ECoG data</h2>
+
+<p>In this section, we will filter and analyze the ECoG data we loaded in the previous section to see if PAC is present in the signal. In humans, PAC is common between oscillations in the theta (4-8 Hz) and high gamma (80-150 Hz) bands, so those frequency ranges will be the ones we use in our filter functions.</p>
+
+<p>To filter the data, we can use the functions we defined in Section 2.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#parameters</span>
+<span class="n">phase_band</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">8</span><span class="p">]</span> <span class="c">#4-8 Hz theta band (modulating frequency)</span>
+<span class="n">amplitude_band</span> <span class="o">=</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span><span class="mi">150</span><span class="p">]</span> <span class="c">#80-150 Hz high gamma band (modulated frequency)</span>
+
+<span class="c">#isolate the slow component</span>
+<span class="n">phase_data_filt</span> <span class="o">=</span> <span class="n">butter_bandpass_filter</span><span class="p">(</span><span class="n">ecog_signal</span><span class="p">,</span> <span class="n">phase_band</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">phase_band</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="nb">round</span><span class="p">(</span><span class="n">srate</span><span class="p">))</span>
+
+<span class="c">#isolate the fast component</span>
+<span class="n">amp_data_filt</span> <span class="o">=</span> <span class="n">butter_bandpass_filter</span><span class="p">(</span><span class="n">ecog_signal</span><span class="p">,</span> <span class="n">amplitude_band</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">amplitude_band</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="nb">round</span><span class="p">(</span><span class="n">srate</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h4 id="plot-the-filtered-ecog-data">Plot the filtered ECoG data</h4>
+
+<p>Plotting the filtered data can let us look at the both the slow frequencies and the fast frequencies separately.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Isolated Theta and High-Gamma Bands of ECoG Signal'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Time (seconds)'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Voltage'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">],</span> <span class="n">phase_data_filt</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s">'Theta band'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">],</span> <span class="n">amp_data_filt</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s">'High-gamma band'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="output_data_text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;matplotlib.legend.Legend at 0x10b8523c8&gt;
+</code></pre></div></div>
+
+<p><img src="../images/build/tutorials/05-FrequencyInteractions_29_1.png" alt="png" /></p>
+
+<p>When we look at the plot above, we can see that there is a theta oscillation present in the signal that has a relatively high amplitude. We can also observe there is higher frequency activity in the high-gamma band. Although the amplitude of the gamma component does seem to change over time, if there is a pattern, it’s not as clear as the one in our simulated signal. So let’s run a Hilbert function and see if we can detect any correlations in gamma envelope and theta phase.</p>
+
+<h4 id="calculate-phase-angle-and-amplitude-envelope">Calculate phase angle and amplitude envelope</h4>
+
+<p>Here we’re using the same functions from section 2 on our ECoG data to calculate gamma amplitude envelope and theta phase angle.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#calculating phase angle of slow component</span>
+<span class="n">phase_data</span> <span class="o">=</span> <span class="n">hilbert</span><span class="p">(</span><span class="n">phase_data_filt</span><span class="p">)</span>
+<span class="n">phase_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">phase_data</span><span class="p">)</span>
+
+<span class="c">#calculating amplitude envelope of fast component</span>
+<span class="n">amp_data</span> <span class="o">=</span> <span class="n">hilbert</span><span class="p">(</span><span class="n">amp_data_filt</span><span class="p">)</span>
+<span class="n">amp_data</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">amp_data</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="plot-phase-and-amplitude-of-ecog-data">Plot phase and amplitude of ECoG data</h4>
+
+<p>Now that we’ve run our calculations, let’s plot the result and see if we can visually detect any correlations.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">],</span> <span class="n">phase_data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span> <span class="s">'Phase of Theta'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">],</span> <span class="n">amp_data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1024</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span> <span class="s">'Amplitude of High-Gamma'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Phase and Amplitude of ECoG Signal'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Time (Seconds)'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="output_data_text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;matplotlib.legend.Legend at 0x119421940&gt;
+</code></pre></div></div>
+
+<p><img src="../images/build/tutorials/05-FrequencyInteractions_34_1.png" alt="png" /></p>
+
+<p>When we look at the figure above, what we need to focus on is the phase of theta and the height of the gamma envelope. Although it’s not very clear at first glance, when you look closely, it’s possible a positive correlation between these two measures. Specifically, it’s seems like <strong>the amplitude envelope of gamma is greatest when the phase angle of theta is close to zero</strong>, or maybe slightly less than zero.</p>
+
+<p>However, it would be silly to conclude that there is a relationship present based on this basic visual analysis. In order to determine if the relationship is present and significant, we should do some math and get a correlation value (r).</p>
+
+<h4 id="determine-the-strength-of-the-correlation-between-theta-phase-and-high-gamma-amplitude-envelope">Determine the strength of the correlation between theta phase and high-gamma amplitude envelope</h4>
+<p>Picking the right correlation function to use here is key because the data is periodic. A simple Pearson correlation cannot be used because the phase of theta is periodic (between -π and π) and a Pearson correlation, intended for linear data, would yeild inaccurate results.</p>
+
+<p>To address this problem, we’ll make a function that correctly correlates periodic data with linear data. Then, we’ll run it on our data and get some correlation values.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">circCorr</span><span class="p">(</span><span class="n">ang</span><span class="p">,</span><span class="n">line</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ang</span><span class="p">)</span>
+    <span class="n">rxs</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">line</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ang</span><span class="p">))</span>
+    <span class="n">rxs</span> <span class="o">=</span> <span class="n">rxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">rxc</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">line</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ang</span><span class="p">))</span>
+    <span class="n">rxc</span> <span class="o">=</span> <span class="n">rxc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">rcs</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ang</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ang</span><span class="p">))</span>
+    <span class="n">rcs</span> <span class="o">=</span> <span class="n">rcs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">rxc</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">rxs</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">rxc</span><span class="o">*</span><span class="n">rxs</span><span class="o">*</span><span class="n">rcs</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">rcs</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="c">#r</span>
+    <span class="n">r_2</span> <span class="o">=</span> <span class="n">rho</span><span class="o">**</span><span class="mi">2</span> <span class="c">#r squared</span>
+    <span class="n">pval</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span> <span class="n">sp</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">chi2</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="p">(</span><span class="n">rho</span><span class="o">**</span><span class="mi">2</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">standard_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="n">r_2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">rho</span><span class="p">,</span> <span class="n">pval</span><span class="p">,</span> <span class="n">r_2</span><span class="p">,</span><span class="n">standard_error</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'Correlation Values:'</span><span class="p">,</span> <span class="n">circCorr</span><span class="p">(</span><span class="n">phase_data</span><span class="p">,</span> <span class="n">amp_data</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="output_stream highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Correlation Values: (0.05742430706754165, 0.0, 0.0032975510421873137, 0.0008190291715994757)
+
+</code></pre></div></div>
+
+<p>The values above represent the r, p, r^2 and standard of error respectively. These values show that there is a significant correlation between theta phase and high gamma amplitude that explains about 5% of the variance.</p>
+
+<p>Now that we know that a significant correlation exists, we just need to determine what phase of theta the amplitude of gamma is coupled to. We can visualize that with a polar bar graph.</p>
+
+<h4 id="visualize-coupled-phase">Visualize coupled phase</h4>
+
+<p>The polar historgram we will generate below will tell us where the greatest amounts of gamma amplitude are located in the theta wave. Discovering the phase of theta that contains the greatest amount of gamma amplitude will give us even more information about the PAC present in the ECoG signal. It’s a lot of code but the result will be worth it, I promise.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bin_size</span> <span class="o">=</span> <span class="mi">5</span> 
+<span class="n">bins</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span><span class="mi">180</span><span class="o">+</span><span class="n">bin_size</span><span class="p">,</span><span class="n">bin_size</span><span class="p">)</span> 
+<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">bins</span><span class="p">,</span> <span class="mf">0.0174532925</span><span class="p">)</span>
+
+<span class="n">amps</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c">#filling phase bins with amplitudes</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">amps_above_lo_bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">phase_data</span> <span class="o">&gt;=</span> <span class="n">bins</span><span class="p">[</span><span class="n">x</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">amps_below_hi_bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">phase_data</span> <span class="o">&lt;</span> <span class="n">bins</span><span class="p">[</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">amps_below_hi_bound</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">amps_below_hi_bound</span><span class="p">)</span>
+    <span class="n">amp_inds_in_this_bin</span> <span class="o">=</span> <span class="p">[</span><span class="n">amp_val</span> <span class="k">for</span> <span class="n">amp_val</span> <span class="ow">in</span> <span class="n">amps_above_lo_bound</span> <span class="k">if</span> <span class="n">amp_val</span> <span class="ow">in</span> <span class="n">amps_below_hi_bound</span><span class="p">]</span>
+    <span class="n">amps_in_this_bin</span> <span class="o">=</span> <span class="n">amp_data</span><span class="p">[</span><span class="n">amp_inds_in_this_bin</span><span class="p">]</span>
+    <span class="n">amps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">amps_in_this_bin</span><span class="p">))</span>
+
+<span class="n">bins</span> <span class="o">=</span> <span class="n">bins</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c">#normalizing to make the effect more clear</span>
+<span class="n">amps</span> <span class="o">=</span> <span class="p">(</span><span class="n">amps</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">amps</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">amps</span><span class="p">))</span>
+
+<span class="c">#plotting figure</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span> <span class="n">polar</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">bins</span><span class="p">,</span> <span class="n">amps</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">bins</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">bins</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Amplitude of High Gamma at Theta Phase'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="output_data_text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(0, 1.6450675564956085)
+</code></pre></div></div>
+
+<p><img src="../images/build/tutorials/05-FrequencyInteractions_40_1.png" alt="png" /></p>
+
+<p>In the figure above, the amplitude of high gamma steadily gets greater at around 135-180 degrees into the theta phase. This means that the amplitude of high gamma is greatest just following the peak of the theta wave. Remember that terms of a periodic signal, 180 degrees is equivalent to zero.</p>
+
+<p>If we look back at the last figure, the figure where we plotted theta phase and gamma amplitude, we can see that the gamma amplitude is greatest just before the phase of theta reaches zero. In other words, we can look at the two figures and see that they tell give us a similar result: gamma amplitude is greatest around the phase of theta at 135-180 degrees.</p>
+
+<p>Therefore, we can conclude that in this ECoG signal the amplitude of high-gamma is coupled to the phase of theta. Our analysis shows that greatest gamma amplitudes occur in the first half of the descending phase, just after the theta peak.</p>
+
+<h2 id="in-summary">In summary</h2>
+
+<p>In this tutorial, we learned that we can examine the relationship between the phase of a slow wave 
+and the amplitude of a faster wave. To isolate the frequency ranges that we want, we use filters and useful mathematical functions to get the phase and amplitude of the waves that we’re interested in. Then we can use statistics to quantify the relationship between the two.</p>
+
+<p>In this example we have shown that, in our data, the amplitude of high gamma is biased to be greatest in the phase just following the peak of theta, demonstrating a phase-amplitude coupling realtionship. Our statistical analysis revealed that this is a small–but significant–correlation.</p>
+
+<p>This tutorial was just an introduction to frequency interactions, specifically phase-amplitude coupling. In the brain, frequency interactions are hypothesized to serve a variety of functions including interregional communication, which is required for coordinated behaviors ranging from simple movement to high-level cognition. Although the mechanism behind frequency interactions is still undetermined, <a href="https://doi.org/10.1016/j.tics.2005.08.011">Fries 2005</a> presents an excellent theory of neuronal coherence and I highly recommend reading it.</p>
+
+<p>There are several mathematical tools available that provide PAC measurements for time series data. You can find them in our lab’s repository <a href="https://github.com/voytekresearch/neurodsp">NeuroDSP</a>. Feel free to check them out and try them on your own. Happy analyzing!</p>
+
+
+
+          <nav class="c-page__nav">
+  
+    <a id="js-page__nav__prev" class="c-page__nav__prev" href="/tutorials/04-EventRelatedPotentials">
+      〈 <span class="u-margin-right-tiny"></span> 04-EventRelatedPotentials
+    </a>
+  
+
+  
+    <a id="js-page__nav__next" class="c-page__nav__next" href="/tutorials/06-ColoredNoise">
+      06-ColoredNoise <span class="u-margin-right-tiny"></span> 〉
+    </a>
+  
+</nav>
+
+        </div>
+      </main>
+    </div>
+
+  </body>
+</html>

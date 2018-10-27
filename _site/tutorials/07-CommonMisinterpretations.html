@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,minimum-scale=1">
+
+  <title>07-CommonMisinterpretations</title>
+  <meta name="description" content="Noise Filter Band Misinterpretation">
+
+  <link rel="canonical" href="http://localhost:4000//tutorials/07-CommonMisinterpretations.html">
+  <link rel="alternate" type="application/rss+xml" title="VoytekLab Tutorials" href="http://localhost:4000//feed.xml">
+
+  <meta property="og:url"         content="http://localhost:4000//tutorials/07-CommonMisinterpretations.html" />
+<meta property="og:type"        content="article" />
+<meta property="og:title"       content="07-CommonMisinterpretations" />
+<meta property="og:description" content="Noise Filter Band Misinterpretation" />
+<meta property="og:image"       content="" />
+
+
+  <script type="application/ld+json">
+  {
+  "@context": "http://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage":
+    "http://localhost:4000//tutorials/07-CommonMisinterpretations.html",
+  "headline":
+    "07-CommonMisinterpretations",
+  "datePublished":
+    "2018-10-26T23:55:44-07:00",
+  "dateModified":
+    "2018-10-26T23:55:44-07:00",
+  "description":
+    "Noise Filter Band Misinterpretation",
+  "author": {
+    "@type": "Person",
+    "name": "VoytekLab"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Data 100 at UC Berkeley",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:4000/",
+      "width": 60,
+      "height": 60
+    }
+  },
+  "image": {
+    "@type": "ImageObject",
+    "url": "http://localhost:4000/",
+    "height": 60,
+    "width": 60
+  }
+}
+
+  </script>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css ">
+  <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+
+  <!-- <link rel="manifest" href="/manifest.json"> -->
+  <!-- <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#efae0a"> -->
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+  <meta name="theme-color" content="#233947">
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/x-icon" href="/images/logo/favicon.ico">
+
+  <!-- MathJax Config -->
+  <!-- Allow inline math using $ and automatically break long math lines -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true,
+        processEnvironments: true
+    },
+    CommonHTML: {
+        linebreaks: {
+            automatic: true,
+        },
+    },
+});
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_CHTML' async></script>
+
+  <!-- DOM updating function -->
+  <script>
+const runWhenDOMLoaded = cb => {
+  if (document.readyState != 'loading') {
+    cb()
+  } else if (document.addEventListener) {
+    document.addEventListener('DOMContentLoaded', cb)
+  } else {
+    document.attachEvent('onreadystatechange', function() {
+      if (document.readyState == 'complete') cb()
+    })
+  }
+}
+
+</script>
+
+  <!-- Include Turbolinks to make page loads fast -->
+  <!-- https://github.com/turbolinks/turbolinks -->
+  <script src="/assets/js/turbolinks.js" async></script>
+  <meta name="turbolinks-cache-control" content="no-cache">
+
+  <!-- Load nbinteract for widgets -->
+  <script src="https://unpkg.com/nbinteract-core" async></script>
+
+  <!-- Google analytics -->
+  <script src="/assets/js/ga.js" async></script>
+
+  <!-- Clipboard copy button -->
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" async></script>
+
+  <!-- Load custom website scripts -->
+  <script src="/assets/js/scripts.js" async></script>
+
+  <!-- Update interact links w/ REST param, is defined in includes so we can use templates -->
+  <script>
+/**
+  * To auto-embed hub URLs in interact links if given in a RESTful fashion
+ */
+
+function getJsonFromUrl(url) {
+  var query = url.split('?');
+  if (query.length < 2) {
+    // No queries so just return false
+    return false;
+  }
+  query = query[1];
+  // Collect REST params into a dictionary
+  var result = {};
+  query.split("&").forEach(function(part) {
+    var item = part.split("=");
+    result[item[0]] = decodeURIComponent(item[1]);
+  });
+  return result;
+}
+
+// Parse a Binder URL, converting it to the string needed for JupyterHub
+function binder2Jupyterhub(url) {
+  newUrl = {};
+  console.log(url)
+  parts = url.split('v2/gh/')[1];
+  // Grab the base repo information
+  repoinfo = parts.split('?')[0];
+  var [org, repo, ref] = repoinfo.split('/');
+  newUrl['repo'] = ['https://github.com', org, repo].join('/');
+  newUrl['branch'] = ref
+  // Grab extra parameters passed
+  params = getJsonFromUrl(url);
+  if (params['filepath'] !== undefined) {
+    newUrl['subPath'] = params['filepath']
+  }
+  return jQuery.param(newUrl);
+}
+
+// Filter out potentially unsafe characters to prevent xss
+function safeUrl(url)
+{
+   return String(encodeURIComponent(url))
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+}
+
+function addParamToInternalLinks(hub) {
+  var links = $("a").each(function() {
+    var href = this.href;
+    // If the link is an internal link...
+    if (href.search("http://localhost:4000") !== -1 || href.startsWith('/') || href.search("127.0.0.1:") !== -1) {
+      // Assume we're an internal link, add the hub param to it
+      var params = getJsonFromUrl(href);
+      if (params !== false) {
+        // We have REST params, so append a new one
+        params['hub'] = hub;
+      } else {
+        // Create the REST params
+        params = {'hub': hub};
+      }
+      // Update the link
+      var newHref = href.split('?')[0] + '?' + jQuery.param(params);
+      this.setAttribute('href', decodeURIComponent(newHref));
+    }
+  });
+  return false;
+}
+
+// Update interact links
+function updateInteractLink() {
+    // hack to make this work since it expects a ? in the URL
+    rest = getJsonFromUrl("?" + location.search.substr(1));
+    hubUrl = rest['hub'];
+    if (hubUrl !== undefined) {
+      // Sanitize the hubUrl
+      hubUrl = safeUrl(hubUrl);
+      // Add HTTP text if omitted
+      if (hubUrl.indexOf('http') < 0) {hubUrl = 'http://' + hubUrl;}
+      link = $("a.interact-button")[0];
+      if (link !== undefined) {
+          // Update the interact link URL
+          var href = link.getAttribute('href');
+          var hub_type = 'binder';
+          if (hub_type === 'binder') {
+            // If binder links exist, we need to re-work them for jupyterhub
+            if (hubUrl.indexOf('http%3A%2F%2Flocalhost') > -1) {
+              // If localhost, assume we're working from a local Jupyter server and remove `/hub`
+              first = [hubUrl, 'git-sync'].join('/')
+            } else {
+              first = [hubUrl, 'hub', 'user-redirect', 'git-sync'].join('/')
+            }
+            href = first + '?' + binder2Jupyterhub(href);
+          } else {
+            // If JupyterHub links, we only need to replace the hub url
+            href = href.replace("https://mybinder.org", hubUrl);
+            if (hubUrl.indexOf('http%3A%2F%2Flocalhost') > -1) {
+              // Assume we're working from a local Jupyter server and remove `/hub`
+              href = href.replace("/hub/user-redirect", "");
+            }
+          }
+          link.setAttribute('href', decodeURIComponent(href));
+
+          // Add text after interact link saying where we're launching
+          hubUrlNoHttp = decodeURIComponent(hubUrl).replace('http://', '').replace('https://', '');
+          $("a.interact-button").after($('<div class="interact-context">on ' + hubUrlNoHttp + '</div>'));
+
+      }
+      // Update internal links so we retain the hub url
+      addParamToInternalLinks(hubUrl);
+    }
+}
+
+runWhenDOMLoaded(updateInteractLink)
+document.addEventListener('turbolinks:load', updateInteractLink)
+</script>
+</head>
+
+  <body>
+    <!-- Show sidebar by default -->
+    <div id="js-textbook" class="c-textbook js-show-sidebar">
+      
+
+
+
+<nav id="js-sidebar" class="c-textbook__sidebar">
+  <img src="/images/logo/logo.png" class="textbook_logo" id="sidebar-logo" data-turbolinks-permanent/>
+  <h2 class="c-sidebar__title">VoytekLab Tutorials</h2>
+  <ul class="c-sidebar__chapters">
+    
+      
+      
+
+      
+      
+
+      <li class="c-sidebar__chapter">
+        <a class="c-sidebar__entry "
+          href="/tutorials/00-Introduction"
+        >
+          
+          Tutorials
+        </a>
+
+        
+
+          
+          
+          
+          
+
+          
+
+          <ul class="c-sidebar__sections ">
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/00-Introduction"
+                >
+                  
+                  00-Introduction
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/01-ElectrophysiologicalTimeSeries"
+                >
+                  
+                  01-ElectrophysiologicalTimeSeries
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/02-Filtering"
+                >
+                  
+                  02-Filtering
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/03-SpectralMethods"
+                >
+                  
+                  03-SpectralMethods
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/04-EventRelatedPotentials"
+                >
+                  
+                  04-EventRelatedPotentials
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/05-FrequencyInteractions"
+                >
+                  
+                  05-FrequencyInteractions
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/06-ColoredNoise"
+                >
+                  
+                  06-ColoredNoise
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry c-sidebar__entry--active"
+                  href="/tutorials/07-CommonMisinterpretations"
+                >
+                  
+                  07-CommonMisinterpretations
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+              
+              
+
+              <li class="c-sidebar__section">
+                <a class="c-sidebar__entry "
+                  href="/tutorials/08-FrequencyMisinterpretations"
+                >
+                  
+                  08-FrequencyMisinterpretations
+                </a>
+
+                
+                
+
+              </li>
+              
+            
+          </ul>
+        
+      </li>
+
+      
+    
+  </ul>
+</nav>
+
+
+      <main class="c-textbook__page" tabindex="-1">
+        <div class="o-wrapper c-sidebar-toggle">
+  <!-- We show the sidebar by default so we use .is-active -->
+  <button
+    id="js-sidebar-toggle"
+    class="hamburger hamburger--arrowalt is-active"
+  >
+    <span class="hamburger-box">
+      <span class="hamburger-inner"></span>
+    </span>
+    <span class="c-sidebar-toggle__label">Toggle Sidebar</span>
+  </button>
+</div>
+
+        <div class="o-wrapper">
+          <!-- INTERACT LINKS -->
+
+    
+    
+    <div class="buttons">
+        <a class="interact-button" href="https://mybinder.org/v2/gh/choldgraf/jupyter-book/master?filepath=content%2Ftutorials%2F07-CommonMisinterpretations.ipynb">Interact</a>
+    </div>
+
+
+          <!-- Shamelessly copied from minimal mistakes -->
+
+
+<!-- TOC will only show up if it has at least one item -->
+
+
+  <aside class="sidebar__right">
+    <nav class="onthispage">
+      <header><h4 class="nav__title"><i class="fa fa-list"></i>   On this page</h4></header>
+      <ul class="toc__menu">
+  <li><a href="#how-band-specific-analysis-goes-wrong">How band-specific analysis goes wrong</a></li>
+</ul>
+    </nav>
+  </aside>
+
+
+          <h1 id="noise-filter-band-misinterpretation">Noise Filter Band Misinterpretation</h1>
+
+<h3 id="how-band-specific-analysis-goes-wrong">How band-specific analysis goes wrong</h3>
+
+<p>We’re at the home stretch! These last couple of tutorials will discuss how various forms of analysis can go arwy and the proposed solutions offered in Voytek Lab.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="kn">from</span> <span class="nn">fooof.synth</span> <span class="kn">import</span> <span class="n">gen_power_spectrum</span>
+<span class="kn">from</span> <span class="nn">fooof</span> <span class="kn">import</span> <span class="n">FOOOF</span>
+<span class="kn">from</span> <span class="nn">fooof.analysis</span> <span class="kn">import</span> <span class="n">get_band_peak</span>
+
+<span class="kn">from</span> <span class="nn">utils.plts</span> <span class="kn">import</span> <span class="n">plot_fm_shading</span>
+</code></pre></div></div>
+
+<h2 id="individual-differences-in-slope-and-oscillations">Individual Differences in Slope and Oscillations</h2>
+
+<p>Unfortunately, analysis of an individual’s Power Spectral Density does not neccesarilly generalize to a broader population. This is because the features which comprise a Power Spectral Density can differ between people. Specifically, Power Spectral Densities have two main features - an <strong><em>aperiodic background</em></strong> which is the 1/f trendline and <strong><em>periodic oscillations</em></strong> which are “bumps” above the 1/f background. These two features often differ between people and Voytek Lab is working on determining if these features can reliably inform us about the individual eventhough there are differences between apparent power spectra.</p>
+
+<p>Don’t worry too much about the details of the following cell.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Define arguments to create Power Spectral Density</span>
+<span class="n">freq_range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">50</span><span class="p">]</span>
+<span class="n">bg_params</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">bg_params_2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mf">3.14</span><span class="p">]</span>
+<span class="n">gauss_params</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">gauss_params_fr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="o">.</span><span class="mi">6</span><span class="p">,</span><span class="o">.</span><span class="mi">9</span><span class="p">]</span>
+
+<span class="c"># Create fooof model</span>
+<span class="n">fm_osc</span> <span class="o">=</span> <span class="n">FOOOF</span><span class="p">()</span>
+<span class="n">fm_bg</span> <span class="o">=</span> <span class="n">FOOOF</span><span class="p">()</span>
+<span class="n">fm_2</span> <span class="o">=</span> <span class="n">FOOOF</span><span class="p">()</span>
+
+<span class="c"># Generate synth psd settings</span>
+<span class="n">fs</span><span class="p">,</span> <span class="n">ps</span> <span class="o">=</span> <span class="n">gen_power_spectrum</span><span class="p">(</span><span class="n">freq_range</span><span class="p">,</span> <span class="n">bg_params</span><span class="p">,</span> <span class="n">gauss_params</span><span class="p">)</span>
+<span class="n">fs_osc</span><span class="p">,</span> <span class="n">ps_osc</span> <span class="o">=</span> <span class="n">gen_power_spectrum</span><span class="p">(</span><span class="n">freq_range</span><span class="p">,</span> <span class="n">bg_params</span><span class="p">,</span> <span class="n">gauss_params_fr</span><span class="p">)</span>
+<span class="n">fs_2</span><span class="p">,</span> <span class="n">ps_2</span> <span class="o">=</span> <span class="n">gen_power_spectrum</span><span class="p">(</span><span class="n">freq_range</span><span class="p">,</span> <span class="n">bg_params_2</span><span class="p">,</span> <span class="n">gauss_params</span><span class="p">)</span>
+
+<span class="c"># Add to fooof model</span>
+<span class="n">fm_bg</span><span class="o">.</span><span class="n">add_data</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">ps</span><span class="p">)</span>
+<span class="n">fm_osc</span><span class="o">.</span><span class="n">add_data</span><span class="p">(</span><span class="n">fs_osc</span><span class="p">,</span> <span class="n">ps_osc</span><span class="p">)</span>
+<span class="n">fm_2</span><span class="o">.</span><span class="n">add_data</span><span class="p">(</span><span class="n">fs_2</span><span class="p">,</span> <span class="n">ps_2</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>As mentioned above, one difference among individuals is the slope of their PSD could vary. This harkens to the previous tutorial about colored noise where β can take different values in the equation:
+<script type="math/tex">\frac{1}{f^{\beta}}</script></p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fm_bg</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="../images/build/tutorials/07-CommonMisinterpretations_8_0.png" alt="png" /></p>
+
+<p>The above plot illustrates the <strong><em>aperiodic background</em></strong> and can vary across people by age, cognitive state, and task during recording.</p>
+
+<p>While a difference in slope alone can introduce confounds in analysis, including oscillations in the picture further confounds analysis. The below plot illustrates the <strong><em>periodic oscillations</em></strong> above the <strong><em>aperiodic background</em></strong>.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fm_osc</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="../images/build/tutorials/07-CommonMisinterpretations_11_0.png" alt="png" /></p>
+
+<p>Individual differences in slope render analytic measures drawn from these Power Spectral Densities less reliable.
+For example - consider that power within a band range is significantly change when slope is varied. Furthermore, the relationship between any two band’s power changes. This ultimately introduces confounds in analysis and is likely to decrease external validity.</p>
+
+<h2 id="individualized-frequency-bands">Individualized Frequency bands</h2>
+
+<p>Another way analyzing power spectra can go wrong is by using defined frequency bands. Cannonically, frequency bands such as the Alpha band have been set at [8,12]Hz. However, individuals can have a personal shift in these bands. For example, some people can have a slow peak alpha which can range from [6,10]Hz. This is a problem because oscillations might not land perfectly in the confines of the band and thus further analysis might miss out on characteristics of the oscillation.</p>
+
+<p>Below, the shaded areas are the cannonically alpha and beta band([8,12] , [15,25]) notice that the oscillations are <strong><em>NOT</em></strong> captured with the pre defined bands.</p>
+
+<div class="language-python input_area highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plot_fm_shading</span><span class="p">(</span><span class="n">fm_osc</span><span class="p">,[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p><img src="../images/build/tutorials/07-CommonMisinterpretations_15_0.png" alt="png" /></p>
+
+<p>tl;dr - Analysis of neural power spectra is hazy because differences in individuals’ slope and oscillatory patterns cause the comparison of two power density spectrums less valid. Here is Voyte Lab’s solution to this problem <a href="https://github.com/voytekresearch/fooof">Fooof</a>.</p>
+
+
+          <nav class="c-page__nav">
+  
+    <a id="js-page__nav__prev" class="c-page__nav__prev" href="/tutorials/06-ColoredNoise">
+      〈 <span class="u-margin-right-tiny"></span> 06-ColoredNoise
+    </a>
+  
+
+  
+    <a id="js-page__nav__next" class="c-page__nav__next" href="/tutorials/08-FrequencyMisinterpretations">
+      08-FrequencyMisinterpretations <span class="u-margin-right-tiny"></span> 〉
+    </a>
+  
+</nav>
+
+        </div>
+      </main>
+    </div>
+
+  </body>
+</html>
