@@ -1,3 +1,5 @@
+# Ignore site build
+_site/*
 # Ignore nb checkpoints
 .ipynb_checkpoints/*
 # Ignore mac directory files
