@@ -22,8 +22,8 @@ email: voytekresearch@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   Tutorials for neuro-electrophysiology, from the VoytekLab.
 
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: # the subpath of your site, e.g. /blog
+url:  https://voytekresearch.github.io/tutorials # the base hostname & protocol for your site, e.g. http://example.com
 
 #######################################################################################
 # Jupyter Book settings
