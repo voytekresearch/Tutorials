@@ -1,11 +1,12 @@
 ---
-interact_link: content/tutorials/01-ElectrophysiologicalTimeSeries.ipynb
+interact_link: content/01-ElectrophysiologicalTimeSeries.ipynb
+download_link: /tutorials/assets/downloads/01-ElectrophysiologicalTimeSeries.ipynb.zip
 title: '01-ElectrophysiologicalTimeSeries'
 prev_page:
-  url: /tutorials/00-Introduction
+  url: /00-Introduction
   title: '00-Introduction'
 next_page:
-  url: /tutorials/02-Filtering
+  url: /02-Filtering
   title: '02-Filtering'
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
@@ -126,7 +127,7 @@ plt.xlim((time_plot))
 
 
 
-![png](../images/build/tutorials/01-ElectrophysiologicalTimeSeries_18_1.png)
+![png](../images/build/01-ElectrophysiologicalTimeSeries_18_1.png)
 
 
 ##### Analyzing our graph

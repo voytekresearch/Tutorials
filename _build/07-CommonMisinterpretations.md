@@ -1,11 +1,12 @@
 ---
-interact_link: content/tutorials/07-CommonMisinterpretations.ipynb
+interact_link: content/07-CommonMisinterpretations.ipynb
+download_link: /tutorials/assets/downloads/07-CommonMisinterpretations.ipynb.zip
 title: '07-CommonMisinterpretations'
 prev_page:
-  url: /tutorials/06-ColoredNoise
+  url: /06-ColoredNoise
   title: '06-ColoredNoise'
 next_page:
-  url: /tutorials/08-FrequencyMisinterpretations
+  url: /08-FrequencyMisinterpretations
   title: '08-FrequencyMisinterpretations'
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
@@ -79,7 +80,7 @@ fm_bg.plot()
 
 
 
-![png](../images/build/tutorials/07-CommonMisinterpretations_8_0.png)
+![png](../images/build/07-CommonMisinterpretations_8_0.png)
 
 
 The above plot illustrates the ***aperiodic background*** and can vary across people by age, cognitive state, and task during recording.
@@ -95,7 +96,7 @@ fm_osc.plot()
 
 
 
-![png](../images/build/tutorials/07-CommonMisinterpretations_11_0.png)
+![png](../images/build/07-CommonMisinterpretations_11_0.png)
 
 
 Individual differences in slope render analytic measures drawn from these Power Spectral Densities less reliable.
@@ -116,7 +117,7 @@ plot_fm_shading(fm_osc,[10, 20], [2, 5])
 
 
 
-![png](../images/build/tutorials/07-CommonMisinterpretations_15_0.png)
+![png](../images/build/07-CommonMisinterpretations_15_0.png)
 
 
 tl;dr - Analysis of neural power spectra is hazy because differences in individuals' slope and oscillatory patterns cause the comparison of two power density spectrums less valid. Here is Voyte Lab's solution to this problem [Fooof](https://github.com/voytekresearch/fooof).

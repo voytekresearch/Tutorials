@@ -1,11 +1,12 @@
 ---
-interact_link: content/tutorials/05-FrequencyInteractions.ipynb
+interact_link: content/05-FrequencyInteractions.ipynb
+download_link: /tutorials/assets/downloads/05-FrequencyInteractions.ipynb.zip
 title: '05-FrequencyInteractions'
 prev_page:
-  url: /tutorials/04-EventRelatedPotentials
+  url: /04-EventRelatedPotentials
   title: '04-EventRelatedPotentials'
 next_page:
-  url: /tutorials/06-ColoredNoise
+  url: /06-ColoredNoise
   title: '06-ColoredNoise'
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
@@ -95,7 +96,7 @@ plt.plot(t[0:1024],sim_signal[0:1024])
 
 
 
-![png](../images/build/tutorials/05-FrequencyInteractions_7_1.png)
+![png](../images/build/05-FrequencyInteractions_7_1.png)
 
 
 At first glance, there seem to be two things going on in this signal: 
@@ -187,7 +188,7 @@ plt.legend(loc=1, fontsize=12)
 
 
 
-![png](../images/build/tutorials/05-FrequencyInteractions_14_1.png)
+![png](../images/build/05-FrequencyInteractions_14_1.png)
 
 
 When we overlay the filtered fast and slow components, we can see interesting "pulses" of high amplitude in the fast component that coincide with the peaks of the slow component.
@@ -239,7 +240,7 @@ plt.legend(loc=1, fontsize=12)
 
 
 
-![png](../images/build/tutorials/05-FrequencyInteractions_18_1.png)
+![png](../images/build/05-FrequencyInteractions_18_1.png)
 
 
 As we can see from the results of our filters, the phase of the slow (4 Hz) component cycles between -π to π four times in a second. We see a similar result for the amplitude envelope of the fast (100 Hz) component; it oscillates between 0 and 1 four times per second as well. The amplitude of the fast component is highest when the phase of the slow component equals zero (the peak of the slow wave) and lowest when the phase equals ±π (the trough of the slow wave). This vizualization makes it very clear that the amplitude of the 100 Hz component is directly related to the phase of the 4 Hz component. 
@@ -320,7 +321,7 @@ Text(0.5,0,'Time (Seconds)')
 
 
 
-![png](../images/build/tutorials/05-FrequencyInteractions_24_1.png)
+![png](../images/build/05-FrequencyInteractions_24_1.png)
 
 
 Even at first glance, these signals are obviousy VERY different. The ECoG signal looks irregular, jagged, and much more natural than the smooth, sinusoidal simulated signal. 
@@ -380,7 +381,7 @@ plt.legend(loc=1, fontsize=12)
 
 
 
-![png](../images/build/tutorials/05-FrequencyInteractions_29_1.png)
+![png](../images/build/05-FrequencyInteractions_29_1.png)
 
 
 When we look at the plot above, we can see that there is a theta oscillation present in the signal that has a relatively high amplitude. We can also observe there is higher frequency activity in the high-gamma band. Although the amplitude of the gamma component does seem to change over time, if there is a pattern, it's not as clear as the one in our simulated signal. So let's run a Hilbert function and see if we can detect any correlations in gamma envelope and theta phase.
@@ -431,7 +432,7 @@ plt.legend(loc=1, fontsize=12)
 
 
 
-![png](../images/build/tutorials/05-FrequencyInteractions_34_1.png)
+![png](../images/build/05-FrequencyInteractions_34_1.png)
 
 
 When we look at the figure above, what we need to focus on is the phase of theta and the height of the gamma envelope. Although it's not very clear at first glance, when you look closely, it's possible a positive correlation between these two measures. Specifically, it's seems like **the amplitude envelope of gamma is greatest when the phase angle of theta is close to zero**, or maybe slightly less than zero.
@@ -524,7 +525,7 @@ plt.ylim(bottom=0)
 
 
 
-![png](../images/build/tutorials/05-FrequencyInteractions_40_1.png)
+![png](../images/build/05-FrequencyInteractions_40_1.png)
 
 
 In the figure above, the amplitude of high gamma steadily gets greater at around 135-180 degrees into the theta phase. This means that the amplitude of high gamma is greatest just following the peak of the theta wave. Remember that terms of a periodic signal, 180 degrees is equivalent to zero. 

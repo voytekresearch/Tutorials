@@ -1,11 +1,12 @@
 ---
-interact_link: content/tutorials/02-Filtering.ipynb
+interact_link: content/02-Filtering.ipynb
+download_link: /tutorials/assets/downloads/02-Filtering.ipynb.zip
 title: '02-Filtering'
 prev_page:
-  url: /tutorials/01-ElectrophysiologicalTimeSeries
+  url: /01-ElectrophysiologicalTimeSeries
   title: '01-ElectrophysiologicalTimeSeries'
 next_page:
-  url: /tutorials/03-SpectralMethods
+  url: /03-SpectralMethods
   title: '03-SpectralMethods'
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
@@ -76,7 +77,7 @@ legend()
 
 
 
-![png](../images/build/tutorials/02-Filtering_5_1.png)
+![png](../images/build/02-Filtering_5_1.png)
 
 
 This signal is composed of two sin waves oscillating at different frequencies, a high-amplitude, slow frequency wave and a low-amplitude, high frequency wave. We can use a **filter** to get just one component of this complex wave and ignore everything else. The filter we will use is known as a Butterworth filter, you can read more about it [here](https://en.wikipedia.org/wiki/Butterworth_filter)
@@ -141,15 +142,15 @@ plt.show()
 
 
 
-![png](../images/build/tutorials/02-Filtering_8_0.png)
+![png](../images/build/02-Filtering_8_0.png)
 
 
 
-![png](../images/build/tutorials/02-Filtering_8_1.png)
+![png](../images/build/02-Filtering_8_1.png)
 
 
 
-![png](../images/build/tutorials/02-Filtering_8_2.png)
+![png](../images/build/02-Filtering_8_2.png)
 
 
 We have separated our complex signal into two components: the low frequency component and the high frequency component.
@@ -177,7 +178,7 @@ legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
 
 
-![png](../images/build/tutorials/02-Filtering_10_1.png)
+![png](../images/build/02-Filtering_10_1.png)
 
 
 
@@ -282,7 +283,7 @@ Text(0.5,1,'Filtering a Delta Function')
 
 
 
-![png](../images/build/tutorials/02-Filtering_15_1.png)
+![png](../images/build/02-Filtering_15_1.png)
 
 
 Something looks wrong.
@@ -371,7 +372,7 @@ legend()
 
 
 
-![png](../images/build/tutorials/02-Filtering_17_1.png)
+![png](../images/build/02-Filtering_17_1.png)
 
 
 One way of getting rid of dealing with time lag is to have a filter with no leading tail like we do here with a causal filter.

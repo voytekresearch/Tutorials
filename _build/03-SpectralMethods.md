@@ -1,11 +1,12 @@
 ---
-interact_link: content/tutorials/03-SpectralMethods.ipynb
+interact_link: content/03-SpectralMethods.ipynb
+download_link: /tutorials/assets/downloads/03-SpectralMethods.ipynb.zip
 title: '03-SpectralMethods'
 prev_page:
-  url: /tutorials/02-Filtering
+  url: /02-Filtering
   title: '02-Filtering'
 next_page:
-  url: /tutorials/04-EventRelatedPotentials
+  url: /04-EventRelatedPotentials
   title: '04-EventRelatedPotentials'
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
@@ -110,7 +111,7 @@ plt.plot(t[0:512],sig1[0:512]+sig2[0:512]) #plot 0.5 seconds of data
 
 
 
-![png](../images/build/tutorials/03-SpectralMethods_10_1.png)
+![png](../images/build/03-SpectralMethods_10_1.png)
 
 
 #### Running and Plotting the FFT
@@ -150,7 +151,7 @@ Text(0.5,1,'FFT of a complex signal')
 
 
 
-![png](../images/build/tutorials/03-SpectralMethods_12_1.png)
+![png](../images/build/03-SpectralMethods_12_1.png)
 
 
 So in this plot we're looking at the power of all of the freqencies present in our signal.
@@ -234,7 +235,7 @@ Text(0.5,1,'ECoG Signal in the Time Domain')
 
 
 
-![png](../images/build/tutorials/03-SpectralMethods_20_1.png)
+![png](../images/build/03-SpectralMethods_20_1.png)
 
 
 #### Calculate and plot the PSD using the FFT
@@ -274,7 +275,7 @@ Text(0.5,1,'FFT of ECoG signal')
 
 
 
-![png](../images/build/tutorials/03-SpectralMethods_22_1.png)
+![png](../images/build/03-SpectralMethods_22_1.png)
 
 
 Tada! Our first PSD! It looks significantly different than the one we just made for the complex signal. This one looks pretty messy and is difficult to interpret because power seems to be decaying exponentially with frequency. So let's try plotting it in log scale. 
@@ -303,7 +304,7 @@ Text(0.5,1,'FFT of ECoG signal (log scale)')
 
 
 
-![png](../images/build/tutorials/03-SpectralMethods_24_1.png)
+![png](../images/build/03-SpectralMethods_24_1.png)
 
 
 That looks a little better. We can see that there are many wavelengths that contribute to this signal, a stark comparison to the two-component sinusoid we analyzed earlier. Additionally, notice that it looks like longer wavelengths (slower frequencies) seem to have a larger power than shorter wavelengths (higher frequencies).
@@ -343,7 +344,7 @@ Text(0.5,1,"Welch's PSD of ECoG signal")
 
 
 
-![png](../images/build/tutorials/03-SpectralMethods_26_1.png)
+![png](../images/build/03-SpectralMethods_26_1.png)
 
 
 Now the signal is much cleaner and easier to interpret. We can start to notice some interesting features of the PSD including a much clearer 1/f slope and some interesting "bumps", or peaks, in the spectrum around 8, 14, and 25 Hz. We'll talk about why these peaks are significant in the next section.

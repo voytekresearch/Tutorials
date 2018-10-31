@@ -20,10 +20,10 @@ title: VoytekLab Tutorials
 author: VoytekLab
 email: voytekresearch@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Tutorials for neuro-electrophysiology, from the VoytekLab.
+  Tutorial materials for the VoytekLab
 
-baseurl: # the subpath of your site, e.g. /blog
-url:  https://voytekresearch.github.io/tutorials # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "/tutorials" # the subpath of your site, e.g. /blog
+url: "https://cogs108.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 
 #######################################################################################
 # Jupyter Book settings
@@ -37,13 +37,17 @@ css_url                   : "/assets/css" # Path to static CSS files
 js_url                    : "/assets/js" # Path to JS files
 collapse_inactive_chapters: true  # Whether to collapse the inactive chapters in the sidebar
 
+# Button settings
+add_interact_button      : true  # Whether to add a button link to an interactive version of the notebook
+add_download_button      : true  # Whether to add a button link to download a copy of the notebook
+
 # Interact link settings
 hub_url                  : "https://mybinder.org"  # The URL for your JupyterHub/BinderHub.
 hub_name                 : "JupyterHub"  # The name of your JupyterHub (used for the button in the NavBar. If an empty string, no button is shown)
 hub_type                 : "binder"  # ['binder', 'jupyterhub']  Whether to build interact links for a BinderHub or a JupyterHub
 textbook_repo_base       : "https://github.com/"  # The site on which the textbook repository is hosted
-textbook_repo_org        : "choldgraf"  # The username or organization that owns this repository
-textbook_repo_name       : "jupyter-book"  # The name of the repository on the web
+textbook_repo_org        : "voytekresearch"  # The username or organization that owns this repository
+textbook_repo_name       : "tutorials"  # The name of the repository on the web
 textbook_repo_branch     : "master"  # The branch on which your textbook is hosted.
 use_jupyterlab           : false  # If 'true', interact links will use JupyterLab as the interface
 interact_text            : "Interact"  # The text that interact buttons will contain.

@@ -13,33 +13,33 @@
 #   in the sidebar. All other values are ignored.
 
 - title: Tutorials
-  url: /tutorials/00-Introduction
+  url: /00-Introduction
   not_numbered: true
   sections:
   - title: 00-Introduction
-    url: /tutorials/00-Introduction
+    url: /00-Introduction
     not_numbered: true
   - title: 01-ElectrophysiologicalTimeSeries
-    url: /tutorials/01-ElectrophysiologicalTimeSeries
+    url: /01-ElectrophysiologicalTimeSeries
     not_numbered: true
   - title: 02-Filtering
-    url: /tutorials/02-Filtering
+    url: /02-Filtering
     not_numbered: true
   - title: 03-SpectralMethods
-    url: /tutorials/03-SpectralMethods
+    url: /03-SpectralMethods
     not_numbered: true
   - title: 04-EventRelatedPotentials
-    url: /tutorials/04-EventRelatedPotentials
+    url: /04-EventRelatedPotentials
     not_numbered: true
   - title: 05-FrequencyInteractions
-    url: /tutorials/05-FrequencyInteractions
+    url: /05-FrequencyInteractions
     not_numbered: true
   - title: 06-ColoredNoise
-    url: /tutorials/06-ColoredNoise
+    url: /06-ColoredNoise
     not_numbered: true
   - title: 07-CommonMisinterpretations
-    url: /tutorials/07-CommonMisinterpretations
+    url: /07-CommonMisinterpretations
     not_numbered: true
   - title: 08-FrequencyMisinterpretations
-    url: /tutorials/08-FrequencyMisinterpretations
+    url: /08-FrequencyMisinterpretations
     not_numbered: true

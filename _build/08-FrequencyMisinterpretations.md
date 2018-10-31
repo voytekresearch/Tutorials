@@ -1,8 +1,9 @@
 ---
-interact_link: content/tutorials/08-FrequencyMisinterpretations.ipynb
+interact_link: content/08-FrequencyMisinterpretations.ipynb
+download_link: /tutorials/assets/downloads/08-FrequencyMisinterpretations.ipynb.zip
 title: '08-FrequencyMisinterpretations'
 prev_page:
-  url: /tutorials/07-CommonMisinterpretations
+  url: /07-CommonMisinterpretations
   title: '07-CommonMisinterpretations'
 next_page:
   url: /
@@ -90,7 +91,7 @@ Text(0.5,1,'Sinusoidal Signal')
 
 
 
-![png](../images/build/tutorials/08-FrequencyMisinterpretations_6_1.png)
+![png](../images/build/08-FrequencyMisinterpretations_6_1.png)
 
 
 ### Complex Sinusoids
@@ -119,7 +120,7 @@ Text(0.5,1,'Complex Sinusoid')
 
 
 
-![png](../images/build/tutorials/08-FrequencyMisinterpretations_8_1.png)
+![png](../images/build/08-FrequencyMisinterpretations_8_1.png)
 
 
 Adding enough sinusoids together creates a complex signal that starts to resemble something we might see in a real electrophysiological recording. The following complex signal is composed of four frequencies: 7 Hz, 18 Hz, 80 Hz, and 130 Hz. 
@@ -149,7 +150,7 @@ Text(0.5,1,'4-Frequency Complex Sinusoid')
 
 
 
-![png](../images/build/tutorials/08-FrequencyMisinterpretations_10_1.png)
+![png](../images/build/08-FrequencyMisinterpretations_10_1.png)
 
 
 ### Non-sinusoids
@@ -180,7 +181,7 @@ Text(0.5,1,'Sawtooth Signal')
 
 
 
-![png](../images/build/tutorials/08-FrequencyMisinterpretations_12_1.png)
+![png](../images/build/08-FrequencyMisinterpretations_12_1.png)
 
 
 Notice this waveform is not a smooth oscillation like the sinusoids above. Instead, its shape resembles the serrated edge of a saw. The "sawtooth" wave is an example of a nonsinudoidal waveform. Here are a few more non-sinusoids. 
@@ -215,7 +216,7 @@ Text(0.5,1,'Triangle Wave')
 
 
 
-![png](../images/build/tutorials/08-FrequencyMisinterpretations_14_1.png)
+![png](../images/build/08-FrequencyMisinterpretations_14_1.png)
 
 
 ## 2. Non-sinusoids in the Frequency Domain
@@ -258,7 +259,7 @@ Text(0.5,1,'FFT of Sawtooth signal')
 
 
 
-![png](../images/build/tutorials/08-FrequencyMisinterpretations_17_1.png)
+![png](../images/build/08-FrequencyMisinterpretations_17_1.png)
 
 
 Although we can see some clear peaks, that PSD looks a little messy, let's clean it up and plot it again using the Welch's method.
@@ -290,7 +291,7 @@ Text(0.5,1,"Welch's PSD of sawtooth signal")
 
 
 
-![png](../images/build/tutorials/08-FrequencyMisinterpretations_19_1.png)
+![png](../images/build/08-FrequencyMisinterpretations_19_1.png)
 
 
 Wait a minute... Those look weird, right? The sawtooth signal we generated has a frequency of 10Hz. So why are we seeing prominent peaks at 10, 20, 30, 40, 50, 60Hz? Notice that these peaks are appearing at integer multiples of the fundamental 10Hz. These are called harmonics. So why is the spectrum telling us there is power in these harmonics when we know that the only frequency present is 10Hz? 
@@ -341,7 +342,7 @@ Text(0.5,1,'Rat Hippocampal LFP')
 
 
 
-![png](../images/build/tutorials/08-FrequencyMisinterpretations_24_1.png)
+![png](../images/build/08-FrequencyMisinterpretations_24_1.png)
 
 
 Take a closer look at the time series we just plotted. **Notice how the peaks and the troughs of the waveforms aren't symmetrical for each cycle**. It looks like the peaks of the waveform are much wider and smoother than the sharp, narrow troughs. The waves around 4.4s are a great example of this. 

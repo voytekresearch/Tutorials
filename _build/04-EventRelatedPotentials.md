@@ -1,11 +1,12 @@
 ---
-interact_link: content/tutorials/04-EventRelatedPotentials.ipynb
+interact_link: content/04-EventRelatedPotentials.ipynb
+download_link: /tutorials/assets/downloads/04-EventRelatedPotentials.ipynb.zip
 title: '04-EventRelatedPotentials'
 prev_page:
-  url: /tutorials/03-SpectralMethods
+  url: /03-SpectralMethods
   title: '03-SpectralMethods'
 next_page:
-  url: /tutorials/05-FrequencyInteractions
+  url: /05-FrequencyInteractions
   title: '05-FrequencyInteractions'
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
@@ -106,7 +107,7 @@ ECoG data ~500 ms before and ~1000 ms after an event
 ```
 
 
-![png](../images/build/tutorials/04-EventRelatedPotentials_5_1.png)
+![png](../images/build/04-EventRelatedPotentials_5_1.png)
 
 
 This really doesn't tell us much about what someone's brain is doing. We have no idea how much of the change in voltage is caused by the **event** compared to **other random ongoing brain activity** and there is no reliability that we will see this in the other stimulus presentations.
@@ -139,7 +140,7 @@ print(my_ERP.shape)
 ```
 
 
-![png](../images/build/tutorials/04-EventRelatedPotentials_7_1.png)
+![png](../images/build/04-EventRelatedPotentials_7_1.png)
 
 
 What a mess.
@@ -193,7 +194,7 @@ legend()
 
 
 
-![png](../images/build/tutorials/04-EventRelatedPotentials_9_2.png)
+![png](../images/build/04-EventRelatedPotentials_9_2.png)
 
 
 This is just a a basic example of an ERP. This plot represents the average signal across 5 events for one electrode.

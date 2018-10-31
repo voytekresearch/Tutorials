@@ -1,6 +1,6 @@
-# Ignore site build
-_site/*
-# Ignore nb checkpoints
-.ipynb_checkpoints/*
-# Ignore mac directory files
-.DS_Store
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Jekyll
+_site/
+.sass-cache

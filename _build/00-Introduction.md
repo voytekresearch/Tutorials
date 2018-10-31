@@ -1,13 +1,14 @@
 ---
 redirect_from:
   - "/"
-interact_link: content/tutorials/00-Introduction.ipynb
+interact_link: content/00-Introduction.ipynb
+download_link: /tutorials/assets/downloads/00-Introduction.ipynb.zip
 title: 'Tutorials'
 prev_page:
   url: /
   title: ''
 next_page:
-  url: /tutorials/00-Introduction
+  url: /00-Introduction
   title: '00-Introduction'
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
@@ -134,7 +135,7 @@ plt.plot(data[0:1000]) #this is what about 1 second of ECoG data looks like
 
 
 
-![png](../images/build/tutorials/00-Introduction_20_1.png)
+![png](../images/build/00-Introduction_20_1.png)
 
 
 Alright, that's all we're going to talk about here.

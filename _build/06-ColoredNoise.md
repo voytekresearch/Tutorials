@@ -1,11 +1,12 @@
 ---
-interact_link: content/tutorials/06-ColoredNoise.ipynb
+interact_link: content/06-ColoredNoise.ipynb
+download_link: /tutorials/assets/downloads/06-ColoredNoise.ipynb.zip
 title: '06-ColoredNoise'
 prev_page:
-  url: /tutorials/05-FrequencyInteractions
+  url: /05-FrequencyInteractions
   title: '05-FrequencyInteractions'
 next_page:
-  url: /tutorials/07-CommonMisinterpretations
+  url: /07-CommonMisinterpretations
   title: '07-CommonMisinterpretations'
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
@@ -38,7 +39,7 @@ white_data, fs = white_noise_time()
 
 
 
-![png](../images/build/tutorials/06-ColoredNoise_5_0.png)
+![png](../images/build/06-ColoredNoise_5_0.png)
 
 
 ### White Noise - Frequency Domain
@@ -54,7 +55,7 @@ white_noise_frequency(white_data,fs)
 
 
 
-![png](../images/build/tutorials/06-ColoredNoise_7_0.png)
+![png](../images/build/06-ColoredNoise_7_0.png)
 
 
 Here is a plot to show the power at every frequency. Notice that the trend is a line parallel to the x-axis. This is a result of β = 0.
@@ -68,7 +69,7 @@ white_welch(white_data,fs)
 
 
 
-![png](../images/build/tutorials/06-ColoredNoise_9_0.png)
+![png](../images/build/06-ColoredNoise_9_0.png)
 
 
 ### Pink Noise - Time Domain
@@ -86,7 +87,7 @@ pink_data,fs = pink_noise_time()
 
 
 
-![png](../images/build/tutorials/06-ColoredNoise_11_0.png)
+![png](../images/build/06-ColoredNoise_11_0.png)
 
 
 ### Pink Noise - Frequency Domain
@@ -100,7 +101,7 @@ pink_noise_frequency(pink_data,fs)
 
 
 
-![png](../images/build/tutorials/06-ColoredNoise_13_0.png)
+![png](../images/build/06-ColoredNoise_13_0.png)
 
 
 Notice that in linear space plot (up on left) plots the data in a hard-to-digest way. As a result, pink noise is often shown in log space - the y-axis is scaled such that each subsequent value is 10x larger than the previous. It turns out that this distribution $\frac{1}{f^{1}}$ mysteriously shows up quite a lot in the [universe.](https://www.youtube.com/watch?v=fCn8zs912OE)
@@ -116,7 +117,7 @@ pink_welch(pink_data,fs)
 
 
 
-![png](../images/build/tutorials/06-ColoredNoise_16_0.png)
+![png](../images/build/06-ColoredNoise_16_0.png)
 
 
 ### Brown Noise - Time Domain
@@ -132,7 +133,7 @@ brown_data, fs = brown_noise_time()
 
 
 
-![png](../images/build/tutorials/06-ColoredNoise_19_0.png)
+![png](../images/build/06-ColoredNoise_19_0.png)
 
 
 ### Brown Noise - Frequency Domain
@@ -146,7 +147,7 @@ brown_noise_frequency(brown_data, fs)
 
 
 
-![png](../images/build/tutorials/06-ColoredNoise_21_0.png)
+![png](../images/build/06-ColoredNoise_21_0.png)
 
 
 Notice that in linear space the power spectrum is slightly harder to digest than the pink noise counterpart. Also note that the slope of the power spectrum is slightly steeper than that of pink noise. These patterns will be more exaggerated as β takes on larger values.
@@ -160,7 +161,7 @@ brown_welch(brown_data, fs)
 
 
 
-![png](../images/build/tutorials/06-ColoredNoise_23_0.png)
+![png](../images/build/06-ColoredNoise_23_0.png)
 
 
 Compare this distribution to that of pink noise. Notice the scaling to see how the β value affects slope in this log-log plot.
