@@ -23,7 +23,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   Tutorial materials for the VoytekLab
 
 baseurl: "/tutorials" # the subpath of your site, e.g. /blog
-url: "https://cogs108.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://voytekresearch.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 
 #######################################################################################
 # Jupyter Book settings
