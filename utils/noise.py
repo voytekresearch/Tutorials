@@ -173,13 +173,13 @@ def brown_noise_frequency(brown_data, fs):
 
     plt.figure(figsize=(16,10))
     plt.subplot(1,2,1)
-    plt.plot(fx_bins[0:4000],abs(fourier[0:4000])) #any frequencies above 200 Hz are probably noise
+    plt.plot(fx_bins[0:1500],abs(fourier[0:1500])) #any frequencies above 200 Hz are probably noise
     plt.ylabel('Power')
     plt.xlabel('Frequency (Hz)')
     plt.title('FFT of Brown Noise')
 
     plt.subplot(1,2,2)
-    plt.plot(fx_bins[0:4000],np.log(abs(fourier[0:4000]))) #any frequencies above 200 Hz are probably noise
+    plt.plot(fx_bins[0:1500],np.log(abs(fourier[0:1500]))) #any frequencies above 200 Hz are probably noise
     plt.ylabel('log Power')
     plt.xlabel('Frequency (Hz)')
     plt.title('FFT of Brown Noise')
