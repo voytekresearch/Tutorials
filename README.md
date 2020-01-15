@@ -1,6 +1,8 @@
 Tutorials
 =========
 
+WARNING: These tutorials are currently being updated, and the master version is out of date. If you want to use these tutorials, please use the [dev](https://github.com/voytekresearch/Tutorials/tree/dev) branch.
+
 Learn from Torben how to do useful Voytek Lab things.
 [![Binder](http://mybinder.org/badge.svg)](http://mybinder.org/repo/voytekresearch/tutorials)
 
