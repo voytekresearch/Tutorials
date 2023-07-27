@@ -1,15 +1,37 @@
-Tutorials
-=========
+# Tutorials
 
-WARNING: These tutorials are currently being updated, and the master version is out of date. If you want to use these tutorials, please use the [dev](https://github.com/voytekresearch/Tutorials/tree/dev) branch.
-
-Learn from Torben how to do useful Voytek Lab things.
+![Language](https://img.shields.io/badge/Language-Python-blue.svg)
 [![Binder](http://mybinder.org/badge.svg)](http://mybinder.org/repo/voytekresearch/tutorials)
 
-* [Introduction to iPython Notebook](http://nbviewer.ipython.org/github/voytekresearch/tutorials/blob/master/Introduction%20to%20iPython%20Notebook.ipynb) 
-* [Filters](http://nbviewer.ipython.org/github/voytekresearch/tutorials/blob/master/Filters.ipynb) 
-* [Power Spectral Density and Sampling](http://nbviewer.ipython.org/github/voytekresearch/tutorials/blob/master/Power%20Spectral%20Density%20and%20Sampling%20Tutorial.ipynb) 
-* [Phase Amplitude Coupling](http://nbviewer.ipython.org/github/voytekresearch/tutorials/blob/master/Phase%20Amplitude%20Coupling%20Tutorial.ipynb)
-* [Filtering Effects on Phase Amplitude Coupling](http://nbviewer.ipython.org/github/voytekresearch/tutorials/blob/master/Filtering%20and%20PAC.ipynb)
-* [Event Related Potential](http://nbviewer.ipython.org/github/voytekresearch/tutorials/blob/master/Event%20Related%20Potential%20Tutorial.ipynb) 
-* [Spike Field Coupling](http://nbviewer.ipython.org/github/voytekresearch/tutorials/blob/master/Spike%20Field%20Coupling%20Tutorial.ipynb) 
+A set of tutorials for getting started with the VoytekLab.
+
+## Overview
+
+The tutorials here are aimed at a general overview of analysing electrophysiological data.
+
+- Getting Started with Python & Jupyter
+- Electrophysiological Time Series
+- Filtering
+- Spectral Estimation
+- Event-Related Analyses
+- Frequency Interactions
+- Time Series Properties
+- Noise, Filters, Bands
+- Time Domain Analyses
+
+For more advanced materials, check out [specparam](https://github.com/fooof-tools/fooof), 
+our module to parameterize neural power spectra, which has specific tutorials 
+[here](https://fooof-tools.github.io/fooof/) and/or 
+[NeuroDSP](https://github.com/neurodsp-tools/neurodsp), 
+our module focused on time-domain analyses, which has tutorials 
+[here](https://neurodsp-tools.github.io/neurodsp/).
+
+## Dependencies
+
+All the notebooks are written in Python3, and presume that you have the 
+[Anaconda](https://www.anaconda.com/download/) distribution.
+
+## Try Them Out
+
+If you want to jump right in to executable notebooks, running on the cloud, press 
+[here](http://mybinder.org/repo/voytekresearch/tutorials)(powered by [Binder](https://mybinder.org)).

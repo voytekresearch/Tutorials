@@ -1,0 +1,8 @@
+# Ignore nb checkpoints
+.ipynb_checkpoints/*
+
+# Ignore cache files
+*/__pycache__/*
+
+# Ignore mac directory files
+.DS_Store
