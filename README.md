@@ -19,16 +19,19 @@ The tutorials here are aimed at a general overview of analysing electrophysiolog
 - Noise, Filters, Bands
 - Time Domain Analyses
 
-For more advanced materials, check out [FOOOF](https://github.com/voytekresearch/fooof), our module to parameterize neural power spectra, which has specific tutorials [here](https://github.com/voytekresearch/fooof/tree/master/tutorial) and/or [NeuroDSP](https://github.com/voytekresearch/neurodsp), our module focused on time-domain analyses, which has tutorials [here](https://github.com/voytekresearch/neurodsp/tree/master/tutorials).
+For more advanced materials, check out [specparam](https://github.com/fooof-tools/fooof), 
+our module to parameterize neural power spectra, which has specific tutorials 
+[here](https://fooof-tools.github.io/fooof/) and/or 
+[NeuroDSP](https://github.com/neurodsp-tools/neurodsp), 
+our module focused on time-domain analyses, which has tutorials 
+[here](https://neurodsp-tools.github.io/neurodsp/).
 
 ## Dependencies
 
-All the notebooks are written in Python3, and presume that you have the [Anaconda](https://www.anaconda.com/download/) distribution.
+All the notebooks are written in Python3, and presume that you have the 
+[Anaconda](https://www.anaconda.com/download/) distribution.
 
 ## Try Them Out
 
-If you want to jump right in to executable notebooks, running on the could, press [here](http://mybinder.org/repo/voytekresearch/tutorials) (powered by [Binder](https://mybinder.org)).
-
-## Acknowledments
-
-Yat team.
+If you want to jump right in to executable notebooks, running on the cloud, press 
+[here](http://mybinder.org/repo/voytekresearch/tutorials)(powered by [Binder](https://mybinder.org)).
